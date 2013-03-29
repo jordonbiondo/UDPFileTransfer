@@ -5,10 +5,11 @@ import java.net.*;
 import java.util.*;
 import java.nio.ByteBuffer;
 
+
+
 public class UFTHeader {
 
-
-    UFTHeaderType type; 
+    UFTHeaderType type;
 
 
     public final int sourcePort;
