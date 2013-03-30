@@ -31,6 +31,9 @@ public class UFTFileSplitter {
     private ArrayList<byte[]> chunks;
 
 
+    Buffer == new Buffer();
+
+    
 
     // /////////////////////////////////////////////////////////////////
     //   Constructors
@@ -54,7 +57,6 @@ public class UFTFileSplitter {
     }
 
 
-
     /*
      * Create a new splitter for a given file
      */
@@ -70,6 +72,21 @@ public class UFTFileSplitter {
 	this(new File(filename));
     }
 
+
+    /*
+     * Chunk up dat file. mkay
+     */
+    private void chunk() {
+
+    }
+
+
+    /*
+     * Rechunk the file with a given chunk size.
+     */
+    public void rechunk(int maxChunkSize) {
+
+    }
 
 
     // /////////////////////////////////////////////////////////////////
