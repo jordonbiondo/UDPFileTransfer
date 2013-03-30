@@ -10,7 +10,7 @@ public class UFTFileSplitter {
     /*
      * Default size, in bytes, for each chunk
      */
-    public static final int DEFAULT_CHUNK_SIZE = 1024;
+    public static final int DEFAULT_CHUNK_SIZE = 512;
 
 
     /*
@@ -31,9 +31,6 @@ public class UFTFileSplitter {
     private ArrayList<byte[]> chunks;
 
 
-    Buffer == new Buffer();
-
-    
 
     // /////////////////////////////////////////////////////////////////
     //   Constructors
@@ -44,15 +41,19 @@ public class UFTFileSplitter {
      *
      * Main Constructor to be filled in
      */
-    public UFTFileSplitter(File file, int maxChunkSize) {
-
+    public UFTFileSplitter(File file, int maxChunkSize) throws IOException {
+	this.chunks = new ArrayList<byte[]>();
+	this.file = file;
+	this.chunk();
     }
 
 
     /*
      * Create a new splitter from a filename
      */
-    public UFTFileSplitter(String filename, int maxChunkSize) throws FileNotFoundException {
+    public UFTFileSplitter(String filename, int maxChunkSize) throws FileNotFoundException,
+								     IOException {
+
 	this(new File(filename), maxChunkSize);
     }
 
@@ -60,7 +61,7 @@ public class UFTFileSplitter {
     /*
      * Create a new splitter for a given file
      */
-    public UFTFileSplitter(File file) {
+    public UFTFileSplitter(File file) throws IOException{
 	this(file, DEFAULT_CHUNK_SIZE);
     }
 
@@ -68,7 +69,8 @@ public class UFTFileSplitter {
     /*
      * Create a new splitter from a filename
      */
-    public UFTFileSplitter(String filename) throws FileNotFoundException {
+    public UFTFileSplitter(String filename) throws FileNotFoundException,
+						   IOException {
 	this(new File(filename));
     }
 
@@ -76,7 +78,35 @@ public class UFTFileSplitter {
     /*
      * Chunk up dat file. mkay
      */
-    private void chunk() {
+    private void chunk() throws IOException {
+	chunks.clear();
+	if(!this.file.canRead()) {
+	    throw new IOException("File: "+file.getName()+" cannot be read, ensure permissions");
+	}
+	try {
+	    FileInputStream fileStream = new FileInputStream(file);
+	    int chunkIndex = 0;
+	    for (int availBytes = fileStream.available(); availBytes > 0;
+		 availBytes = fileStream.available()) {
+		int bytesToGrab = maxChunkSize < availBytes ? maxChunkSize : availBytes;
+		System.out.println("avail: "+availBytes+"\nmax: "+maxChunkSize);
+		byte[] currentChunk = new byte[bytesToGrab];
+		// read the bytes into the buffer
+		if(fileStream.read(currentChunk) != -1) {
+		    chunks.add(chunkIndex, currentChunk);
+		} else {
+		    throw new IOException("bytes stream  for " +
+					  file.getName() + " ended unexpectedly");
+		}
+		chunkIndex++;
+	    }
+
+	} catch(FileNotFoundException fnfe) {
+	    fnfe.printStackTrace();
+	} catch(Exception e) {
+	    e.printStackTrace();
+	    // do stuff
+	}
 
     }
 
