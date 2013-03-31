@@ -1,12 +1,7 @@
 * UPD File Transfer
   Server and Client applications for file transfers over UDP
 ** Header Information
-   | Header         |                  |
-   |----------------+------------------|
-   | Source Port    | Destination Port |
-   |----------------+------------------|
-   | Data Length    | CheckSum         |
-   |----------------+------------------|
-   | Current Packet | Total Packets    |
-   |----------------+------------------|
-   | Data           |  Data            |
+   | bytes |  0-3 |      4-7 |      8-11 |       12-15 |    16-23 |      24-27 |        28-31 |
+   |-------+------+----------+-----------+-------------+----------+------------+--------------|
+   |       | type | src port | dest port | data length | checksum | sequence # | packet count |
+
