@@ -9,6 +9,14 @@ import java.nio.ByteBuffer;
 
 public class UFTHeader {
 
+
+    /*
+     * The size in byte of a UFT Header
+     * Subject to change
+     */
+    public static final int BYTE_SIZE = 32;
+
+
     UFTHeaderType type;
 
 
@@ -24,7 +32,7 @@ public class UFTHeader {
     public final int totalPackets;
 
 
-    public final long dataSize;
+    public final int  dataSize;
 
 
     private long checksum = 0;
@@ -35,7 +43,7 @@ public class UFTHeader {
      * UFTHeader
      */
     public UFTHeader(int sourcePort, int destPort, UFTHeaderType type,
-		     int packetNumber, int totalPackets, long dataSize) {
+		     int packetNumber, int totalPackets, int dataSize) {
 	this.type = type;
 	this.sourcePort = sourcePort;
 	this.destPort = destPort;
@@ -45,8 +53,14 @@ public class UFTHeader {
     }
 
 
-    public void computeChecksum() {
-	// Do some computations here.
+    public void computeChecksum(byte[] data) {
+	// set the checksum based on the data given
+	//
+	//
+	//
+	//            Do this.
+	//
+	//
 	this.checksum = 0;
     }
 
@@ -63,20 +77,15 @@ public class UFTHeader {
      * Get Header as Byte Array.
      */
     public byte[] toBytes() {
-	ByteBuffer buff = ByteBuffer.allocate(36);
+	ByteBuffer buff = ByteBuffer.allocate(UFTHeader.BYTE_SIZE);
 	buff.putInt(type.ordinal());
 	buff.putInt(sourcePort);
 	buff.putInt(destPort);
-	buff.putLong(dataSize);
+	buff.putInt(dataSize);
 	buff.putLong(checksum);
 	buff.putInt(packetNumber);
 	buff.putInt(totalPackets);
 	return buff.array();
-	// byte[] bytes = new byte[buff.position()];
-	// for (int i = 0; i < bytes.length; i++) {
-	//     bytes[i] = buff.get(i);
-	// }
-	// return bytes;
     }
 
 }
