@@ -150,7 +150,7 @@ public class UFTFileSplitter {
     /*
      * Get bytes for a file chunk at index
      */
-    public byte[] getChunk(int index) throws IndexOutOfBoundsException{
+    public byte[] getChunk(int index) {
 	return this.chunks.get(index);
     }
 
