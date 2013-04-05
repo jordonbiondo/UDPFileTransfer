@@ -53,7 +53,6 @@ public class UFTFileSplitter {
      */
     public UFTFileSplitter(String filename, int maxChunkSize) throws FileNotFoundException,
 								     IOException {
-
 	this(new File(filename), maxChunkSize);
     }
 
@@ -100,18 +99,16 @@ public class UFTFileSplitter {
 		}
 		chunkIndex++;
 	    }
-
 	} catch(FileNotFoundException fnfe) {
 	    fnfe.printStackTrace();
 	} catch(Exception e) {
 	    e.printStackTrace();
 	    // do stuff
 	}
-
     }
 
 
-    /*
+    /* TODO
      * Rechunk the file with a given chunk size.
      */
     public void rechunk(int maxChunkSize) {
