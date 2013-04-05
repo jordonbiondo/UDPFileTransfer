@@ -25,6 +25,15 @@ public class PacketAssemblyTests {
 			   0, 0, 0, 0, 3, 0, 0, 0, 10, 1, 2, 3, 4, 0, 4, 3, 2, 1 };
 	System.out.println(Arrays.equals(packet.getData(), expected) ? "pass" : "fail");
 
+	try {
+	    UFTPacket uftPacket = new UFTPacket(packet);
+	    System.out.println(uftPacket);
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+
+
+
     }
 
 }
