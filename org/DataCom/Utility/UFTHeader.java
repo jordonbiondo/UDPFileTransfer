@@ -88,4 +88,29 @@ public class UFTHeader {
 	return buff.array();
     }
 
+    public String toString() {
+	StringBuffer buffer = new StringBuffer();
+	buffer.append("Type: ");
+	buffer.append(this.type.name());
+	buffer.append("\n");
+	buffer.append("Source: ");
+	buffer.append(this.sourcePort);
+	buffer.append("\n");
+	buffer.append("Dest: ");
+	buffer.append(this.destPort);
+	buffer.append("\n");
+	buffer.append("Num: ");
+	buffer.append(this.packetNumber);
+	buffer.append("\n");
+	buffer.append("Total: ");
+	buffer.append(this.totalPackets);
+	buffer.append("\n");
+	buffer.append("Size: ");
+	buffer.append(this.dataSize);
+	buffer.append("\n");
+	buffer.append("checkSume: ");
+	buffer.append(this.getChecksum());
+	buffer.append("\n");
+	return buffer.toString();
+    }
 }
