@@ -5,12 +5,10 @@ testing-dir=org/DataCom/Testing
 server-exec=$(server-dir)/UDPFileTransferServer.class
 client-exec=$(client-dir)/UDPFileTransferClient.class
 
-
+default: $(server-exec)
 
 clean:
 	rm -f $(server-dir)/*.class $(client-dir)/*.class $(utility-dir)/*.class
-
-default: $(server-exec)
 
 
 server: $(server-exec)
