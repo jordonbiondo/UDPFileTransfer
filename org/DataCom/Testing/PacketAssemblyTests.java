@@ -11,23 +11,19 @@ public class PacketAssemblyTests {
     public static void main(String[] args) {
 
 	UFTPacketAssembler assembler = new UFTPacketAssembler(9000, 9001);
-
 	byte[] testData = {1, 2, 3, 4, 0, 4, 3, 2, 1};
-
+	byte[] testData2 = {1, 2, 3, 4, 0, 4, 3, 2, 2};
 	DatagramPacket packet = assembler.assemble(UFTHeaderType.ACK, 3, 10, testData);
-
-	for (byte b : packet.getData()) {
-	    System.out.print(b+" ");
-	}
-	System.out.print("\b\n");
-	byte[] expected = {0, 0, 0, 1, 0, 0, 35, 40, 0, 0, 35, 41,
-			   0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0,
-			   0, 0, 0, 0, 3, 0, 0, 0, 10, 1, 2, 3, 4, 0, 4, 3, 2, 1 };
-	System.out.println(Arrays.equals(packet.getData(), expected) ? "pass" : "fail");
+	DatagramPacket packet2 = assembler.assemble(UFTHeaderType.GET, 2, 11, testData2);
 
 	try {
 	    UFTPacket uftPacket = new UFTPacket(packet);
-	    System.out.println(uftPacket);
+	    UFTPacket uftPacket2 = new UFTPacket(packet);
+	    UFTPacket uftPacket3 = new UFTPacket(packet2);
+	    System.out.println(uftPacket.getHeader().getChecksum() !=
+			       uftPacket3.getHeader().getChecksum() ? "pass" : "fail");
+	    System.out.println(uftPacket.getHeader().getChecksum() ==
+			       uftPacket2.getHeader().getChecksum() ? "pass" : "fail");
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}

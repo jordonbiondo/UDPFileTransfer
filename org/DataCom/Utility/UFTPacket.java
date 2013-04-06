@@ -1,18 +1,32 @@
 package org.DataCom.Utility;
 
 import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.nio.ByteBuffer;
 import java.math.BigInteger;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.util.*;
 
-
+/*
+ * UFT Packet.
+ */
 public class UFTPacket {
 
+
+    /*
+     * Header
+     */
     private UFTHeader header;
 
+    /*
+     * Packet data
+     */
     private byte[] data;
 
+
+
+    // /////////////////////////////////////////////////////////////////
+    //   Constructors
+    // /////////////////////////////////////////////////////////////////
 
     /*
      * Create a UFTPacket given a DatagramPacket containing UFT data
@@ -53,12 +67,13 @@ public class UFTPacket {
 
 	    // get the total number of packets
 	    int totalPackets = ByteUtils.intVal(Arrays.copyOfRange(headerData, 28, UFTHeader.BYTE_SIZE));
+	    // build the header with the extracted info
 	    UFTHeader header = new UFTHeader(sourcePort, destinationPort, packetType,
 					     packetNumber, totalPackets, dataSize);
-
+	    header.overrideChecksum(checksum);
+	    // set this instances header and data
 	    this.header = header;
 	    this.data = packetData;
-	    
 	} catch (ByteTranslationException bte) {
 	    throw new MalformedPacketException("Error in byte translation: " + bte.getMessage());
 	} catch (Exception e) {
@@ -68,7 +83,7 @@ public class UFTPacket {
 
 
     /*
-     * Create a UFTPacket from a header and data
+     * Create a UFTPacket from a header and data.
      */
     public UFTPacket(UFTHeader header, byte[] data) {
 	this.header = header;
@@ -76,28 +91,39 @@ public class UFTPacket {
 
     }
 
+
+    // /////////////////////////////////////////////////////////////////
+    //   Methods
+    // /////////////////////////////////////////////////////////////////
+
+
     /*
-     * Return the packet header
+     * Return the packet header.
      */
     public UFTHeader getHeader() {
 	return this.header;
     }
 
+
     /*
-     * Return the packets data bytes
+     * Return the packets data bytes.
      */
     public byte[] getData() {
 	return this.data;
     }
 
+
     /*
-     * Return the string representation of the data byte array
+     * Return the string representation of the data byte array.
      */
     public String getDataAsString() {
 	return new String(data);
     }
 
 
+    /*
+     * To String.
+     */
     public String toString() {
 	StringBuffer buffer = new StringBuffer();
 	buffer.append("Header-----------------------\n");
@@ -109,5 +135,4 @@ public class UFTPacket {
 	buffer.append("\n");
 	return buffer.toString();
     }
-
 }
