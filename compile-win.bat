@@ -1,3 +1,3 @@
 ECHO OFF
-javac C:/Users/Jason/Documents/GitHub/UDPFileTransfer/org/DataCom/Client/*.java C:/Users/Jason/Documents/GitHub/UDPFileTransfer/org/DataCom/Server/*.java C:/Users/Jason/Documents/GitHub/UDPFileTransfer/org/DataCom/Testing/*.java C:/Users/Jason/Documents/GitHub/UDPFileTransfer/org/DataCom/Utility/*.java
+javac org/DataCom/Client/*.java org/DataCom/Server/*.java org/DataCom/Testing/*.java org/DataCom/Utility/*.java
 ECHO ON
