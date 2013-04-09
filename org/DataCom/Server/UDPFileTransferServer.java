@@ -4,18 +4,70 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.io.*;
 import java.net.*;
+import org.DataCom.Utility.*;
 
 
 public class UDPFileTransferServer {
 
-    int port;
+    /*
+     * Port to listen for packets on
+     */
+    private int listenPort;
+
+    public boolean shouldListen;
 
 
+    private ConcurrentLinkedQueue<UFTPacket> reactionQueue;
 
+    /*
+     * Packet Listener thread
+     */
     Thread packetListener;
 
 
+    /*
+     * Packet Send Thread
+     */
     Thread packetSender;
+
+
+    // /////////////////////////////////////////////////////////////////
+    //   Constructors
+    // /////////////////////////////////////////////////////////////////
+
+
+    /*
+     * Constructor
+     */
+    public UDPFileTransferServer(int port) {
+	this.listenPort = port;
+    }
+
+
+    // /////////////////////////////////////////////////////////////////
+    //   Methods
+    // /////////////////////////////////////////////////////////////////
+
+
+    /*
+     * Set listen port
+     */
+    public void setListenPort(int port) {
+	this.listenPort = port;
+    }
+
+
+    /*
+     * Get listen port
+     */
+    public int getListenPort() {
+	return this.listenPort;
+    }
+
+
+    public void enqueueReaction(UFTPacket p) {
+	reactionQueue.add(p);
+    }
 
 
 
@@ -26,9 +78,10 @@ public class UDPFileTransferServer {
 
     }
 
-    /*
-     * Main
-     */
+
+    // /////////////////////////////////////////////////////////////////
+    //   APPLICATION MAIN
+    // /////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
 
     }

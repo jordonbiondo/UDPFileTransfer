@@ -58,7 +58,7 @@ public class UFTPacket {
 
 	    this.header = header;
 	    this.data = packetData;
-	    
+
 	} catch (ByteTranslationException bte) {
 	    throw new MalformedPacketException("Error in byte translation: " + bte.getMessage());
 	} catch (Exception e) {
