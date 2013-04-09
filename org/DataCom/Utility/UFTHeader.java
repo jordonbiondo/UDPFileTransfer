@@ -2,13 +2,15 @@ package org.DataCom.Utility;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.zip.CRC32;
 
 
-
+/*
+ * UFT Header.
+ */
 public class UFTHeader {
-
 
     /*
      * The size in byte of a UFT Header
@@ -16,28 +18,50 @@ public class UFTHeader {
      */
     public static final int BYTE_SIZE = 32;
 
-
+    /*
+     * Header type.
+     */
     UFTHeaderType type;
 
 
+    /*
+     * Source Port.
+     */
     public final int sourcePort;
 
 
+    /*
+     * Destination Port.
+     */
     public final int destPort;
 
 
+    /*
+     * Sequence number
+     */
     public final int packetNumber;
 
 
+    /*
+     * Total Packets
+     */
     public final int totalPackets;
 
 
+    /*
+     * Data size
+     */
     public final int  dataSize;
 
 
+    /*
+     * Checksum
+     */
     private long checksum = 0;
 
-
+    // /////////////////////////////////////////////////////////////////
+    //  Constructors
+    // /////////////////////////////////////////////////////////////////
 
     /*
      * UFTHeader
@@ -53,15 +77,18 @@ public class UFTHeader {
     }
 
 
-    public void computeChecksum(byte[] data) {
-	// set the checksum based on the data given
-	//
-	//
-	//
-	//            Do this.
-	//
-	//
-	this.checksum = 0;
+    // /////////////////////////////////////////////////////////////////
+    //  Methods
+    // /////////////////////////////////////////////////////////////////
+
+
+    /*
+     * Computer the checksum with CRC32
+     */
+    public void computeChecksum(final byte[] data) {
+	this.checksum = new CRC32() {{
+	    update(data);
+	}}.getValue();
     }
 
 
@@ -70,6 +97,14 @@ public class UFTHeader {
      */
     public long getChecksum() {
 	return this.checksum;
+    }
+
+
+    /*
+     * Override the current checksum
+     */
+    public void overrideChecksum(long checksum) {
+	this.checksum = checksum;
     }
 
 
@@ -88,6 +123,10 @@ public class UFTHeader {
 	return buff.array();
     }
 
+
+    /*
+     * To String.
+     */
     public String toString() {
 	StringBuffer buffer = new StringBuffer();
 	buffer.append("Type: ");
@@ -108,7 +147,7 @@ public class UFTHeader {
 	buffer.append("Size: ");
 	buffer.append(this.dataSize);
 	buffer.append("\n");
-	buffer.append("checkSume: ");
+	buffer.append("Checksum: ");
 	buffer.append(this.getChecksum());
 	buffer.append("\n");
 	return buffer.toString();

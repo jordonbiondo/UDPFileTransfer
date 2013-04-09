@@ -5,6 +5,10 @@ import java.io.*;
 import java.net.*;
 
 
+/*
+ * UFT File Splitter.
+ * Express file chunkification tool
+ */
 public class UFTFileSplitter {
 
     /*
@@ -31,7 +35,6 @@ public class UFTFileSplitter {
     private ArrayList<byte[]> chunks;
 
 
-
     // /////////////////////////////////////////////////////////////////
     //   Constructors
     // /////////////////////////////////////////////////////////////////
@@ -51,8 +54,8 @@ public class UFTFileSplitter {
     /*
      * Create a new splitter from a filename
      */
-    public UFTFileSplitter(String filename, int maxChunkSize) throws FileNotFoundException,
-								     IOException {
+    public UFTFileSplitter(String filename, int maxChunkSize) throws IOException {
+
 	this(new File(filename), maxChunkSize);
     }
 
@@ -68,8 +71,8 @@ public class UFTFileSplitter {
     /*
      * Create a new splitter from a filename
      */
-    public UFTFileSplitter(String filename) throws FileNotFoundException,
-						   IOException {
+    public UFTFileSplitter(String filename) throws IOException {
+
 	this(new File(filename));
     }
 
@@ -88,7 +91,6 @@ public class UFTFileSplitter {
 	    for (int availBytes = fileStream.available(); availBytes > 0;
 		 availBytes = fileStream.available()) {
 		int bytesToGrab = maxChunkSize < availBytes ? maxChunkSize : availBytes;
-		System.out.println("avail: "+availBytes+"\nmax: "+maxChunkSize);
 		byte[] currentChunk = new byte[bytesToGrab];
 		// read the bytes into the buffer
 		if(fileStream.read(currentChunk) != -1) {
