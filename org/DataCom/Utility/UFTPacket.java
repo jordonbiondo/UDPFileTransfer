@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class UFTPacket {
 
-
+    public static final int BYTE_SIZE = 512;
     /*
      * Header
      */
@@ -74,7 +74,7 @@ public class UFTPacket {
 	    // set this instances header and data
 	    this.header = header;
 	    this.data = packetData;
-	    
+
 	} catch (ByteTranslationException bte) {
 	    throw new MalformedPacketException("Error in byte translation: " + bte.getMessage());
 	} catch (Exception e) {
