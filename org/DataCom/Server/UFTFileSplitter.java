@@ -3,7 +3,7 @@ package org.DataCom.Server;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-
+import org.DataCom.Utility.*;
 
 /*
  * UFT File Splitter.
@@ -14,7 +14,7 @@ public class UFTFileSplitter {
     /*
      * Default size, in bytes, for each chunk
      */
-    public static final int DEFAULT_CHUNK_SIZE = 512;
+    public static final int DEFAULT_CHUNK_SIZE = UFTPacket.BYTE_SIZE - UFTHeader.BYTE_SIZE;
 
 
     /*
