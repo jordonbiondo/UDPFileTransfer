@@ -7,8 +7,8 @@ public class UDPClient {
 	DatagramSocket clientSocket = new DatagramSocket();
 	Scanner input = new Scanner(System.in);
 	String message = input.next();
-	byte[] sendData = new byte[1024];
-	sendData = message.getBytes();
+	byte[] sendData = new byte[32];
+	sendData[3] = 1;
 	InetAddress IPAddress = InetAddress.getByName("127.0.0.1");
 	DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9898);
 	clientSocket.send(sendPacket);
