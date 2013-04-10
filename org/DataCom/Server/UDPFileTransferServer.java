@@ -40,7 +40,16 @@ public class UDPFileTransferServer {
      * Constructor
      */
     public UDPFileTransferServer(int port) {
-	this.listenPort = port;
+	try {
+	    this.reactionQueue = new ConcurrentLinkedQueue<UFTPacket>();
+	    this.listenPort = port;
+	    this.packetListener = new Thread(new UFTServerListener(this));
+	    this.shouldListen = true;
+	    packetListener.start();
+	} catch (SocketException e) {
+	    System.out.println("Cannot start server on port " + port);
+	    e.printStackTrace();
+	}
     }
 
 
@@ -70,7 +79,6 @@ public class UDPFileTransferServer {
     }
 
 
-
     /*
      * Start the server
      */
@@ -83,6 +91,6 @@ public class UDPFileTransferServer {
     //   APPLICATION MAIN
     // /////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
-
+	new UDPFileTransferServer(9898);
     }
 }
