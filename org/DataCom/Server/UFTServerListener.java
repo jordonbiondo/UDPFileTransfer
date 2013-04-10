@@ -7,7 +7,7 @@ import java.net.*;
 import org.DataCom.Utility.*;
 
 
-public class UFTPacketListener implements Runnable {
+public class UFTServerListener implements UFTPacketListener {
 
     /*
      * Parent server
@@ -29,7 +29,7 @@ public class UFTPacketListener implements Runnable {
     /*
      * UFT Packet Listener
      */
-    public UFTPacketListener(UDPFileTransferServer server) throws SocketException{
+    public UFTServerListener(UDPFileTransferServer server) throws SocketException{
 	this.server = server;
 	this.serverSocket = new DatagramSocket(server.getListenPort());
     }
@@ -41,20 +41,38 @@ public class UFTPacketListener implements Runnable {
     public void run() {
 	byte[] recveivedData;
 	while(server.shouldListen) {
-	    recveivedData = new byte[1024];
+	    recveivedData = new byte[UFTPacket.BYTE_SIZE];
 	    try {
+		System.out.println("receiving......");
 		//make a data packet
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
 		// try to fill it
 		serverSocket.receive(dataPacket);
-		// fill packet wrapper
-		UFTPacket packet = new UFTPacket(dataPacket);
-		server.enqueueReaction(packet);
+		onPacketReceive(dataPacket);
+		System.out.println("received");
 	    } catch(Exception e) {
-
+		e.printStackTrace();
 	    }
 
 	}
     }
+
+
+    public void onPacketReceive(DatagramPacket dataPacket) {
+	// fill packet wrapper
+	try {
+	    UFTPacket packet = new UFTPacket(dataPacket);
+	    server.enqueueReaction(packet);
+	} catch(MalformedPacketException mpe) {
+	    onPacketError(dataPacket, mpe);
+	}
+    }
+
+
+    public void onPacketError(DatagramPacket packet, Exception e) {
+	System.out.println("Shit, packet error");
+	e.printStackTrace();
+    }
+
 
 }
