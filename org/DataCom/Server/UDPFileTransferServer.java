@@ -16,6 +16,8 @@ public class UDPFileTransferServer {
 
     public boolean shouldListen;
 
+    public boolean shouldSend;
+
 
     private ConcurrentLinkedQueue<UFTPacket> reactionQueue;
 
@@ -44,8 +46,8 @@ public class UDPFileTransferServer {
 	    this.reactionQueue = new ConcurrentLinkedQueue<UFTPacket>();
 	    this.listenPort = port;
 	    this.packetListener = new Thread(new UFTServerListener(this));
+	    this.packetSender = new Thread(new UFTServerSpeaker(this));
 	    this.shouldListen = true;
-	    packetListener.start();
 	} catch (SocketException e) {
 	    System.out.println("Cannot start server on port " + port);
 	    e.printStackTrace();
@@ -78,11 +80,15 @@ public class UDPFileTransferServer {
 	reactionQueue.add(p);
     }
 
-
+    public ConcurrentLinkedQueue getQueu() {
+	return this.reactionQueue;
+    }
     /*
      * Start the server
      */
     public void start() {
+	packetListener.start();
+	packetSender.start();
 
     }
 
