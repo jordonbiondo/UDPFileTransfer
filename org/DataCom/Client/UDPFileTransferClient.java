@@ -4,6 +4,34 @@ import org.DataCom.Utility.*;
 
 public class UDPFileTransferClient {
 
+    private int sendPort;
+
+    public boolean shouldListen;
+
+    public boolean shouldSend;
+
+    // /////////////////////////////////////////////////////////////////
+    //   Constructors
+    // /////////////////////////////////////////////////////////////////
+
+
+    // /////////////////////////////////////////////////////////////////
+    //   Methods
+    // /////////////////////////////////////////////////////////////////
+
+
+    /*
+     * Get Send port
+     */
+    public int getSendPort() {
+	return sendPort;
+    }
+
+
+    // /////////////////////////////////////////////////////////////////
+    //   Client main
+    // /////////////////////////////////////////////////////////////////
+
     public static void main(String[] args) {
 	UFTHeader h = new UFTHeader(11, 22, UFTHeaderType.DAT, 44, 55, 33);
 	for (byte b : h.toBytes()) {
@@ -12,4 +40,7 @@ public class UDPFileTransferClient {
 	System.out.println();
 
     }
+
+
+
 }
