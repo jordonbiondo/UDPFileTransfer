@@ -44,7 +44,7 @@ public class UFTFileSplitter {
      *
      * Main Constructor to be filled in
      */
-    public UFTFileSplitter(File file, int maxChunkSize) throws IOException {
+    public UFTFileSplitter(File file, int maxChunkSize)  throws IOException {
 	this.chunks = new ArrayList<byte[]>();
 	this.file = file;
 	this.chunk();
@@ -63,7 +63,7 @@ public class UFTFileSplitter {
     /*
      * Create a new splitter for a given file
      */
-    public UFTFileSplitter(File file) throws IOException{
+    public UFTFileSplitter(File file) throws IOException {
 	this(file, DEFAULT_CHUNK_SIZE);
     }
 
@@ -110,12 +110,13 @@ public class UFTFileSplitter {
     }
 
 
-    /* TODO
+    /*
      * Rechunk the file with a given chunk size.
      */
-    public void rechunk(int maxChunkSize) {
-
-    }
+    // public void rechunk(int maxChunkSize) {
+    // 	this.maxChunkSize = maxChunkSize;
+    // 	chunk()
+    // }
 
 
     // /////////////////////////////////////////////////////////////////
