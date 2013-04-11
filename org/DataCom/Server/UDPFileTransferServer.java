@@ -83,6 +83,7 @@ public class UDPFileTransferServer {
     public ConcurrentLinkedQueue getQueu() {
 	return this.reactionQueue;
     }
+
     /*
      * Start the server
      */
@@ -93,10 +94,22 @@ public class UDPFileTransferServer {
     }
 
 
+    /*
+     * Returns true if fileRequest is a valid file to send to the client
+     */
+    public boolean acceptsRequest(String fileRequest) {
+	File file = new File(fileRequest);
+	// file cannot request paths to files, only a single filename
+	return file.isFile() && file.getName().equals(fileRequest);
+    }
+
+
+
     // /////////////////////////////////////////////////////////////////
     //   APPLICATION MAIN
     // /////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
-	new UDPFileTransferServer(9898);
+	UDPFileTransferServer server = new UDPFileTransferServer(9898);
+	server.start();
     }
 }
