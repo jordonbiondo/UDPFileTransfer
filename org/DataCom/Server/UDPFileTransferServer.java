@@ -14,12 +14,36 @@ public class UDPFileTransferServer {
      */
     private int listenPort;
 
+
+    /*
+     * Shoule the server listen for packets
+     */
     public boolean shouldListen;
 
+
+    /*
+     * Should the server be sending packets
+     */
     public boolean shouldSend;
 
 
+    /*
+     * File splitter
+     */
+    private UFTFileSplitter fileSplitter;
+
+
+    /*
+     * Received packet queue
+     */
     private ConcurrentLinkedQueue<UFTPacket> reactionQueue;
+
+
+    /*
+     * Packets waiting to be sent
+     */
+    private ConcurrentLinkedQueue<UFTPacket> sendQueue;
+
 
     /*
      * Packet Listener thread
@@ -93,6 +117,8 @@ public class UDPFileTransferServer {
 
     }
 
+
+    
 
     /*
      * Returns true if fileRequest is a valid file to send to the client
