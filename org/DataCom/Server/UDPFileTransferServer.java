@@ -118,7 +118,29 @@ public class UDPFileTransferServer {
     }
 
 
-    
+    public void prepareFileTransmission(File file) {
+	try {
+	    fileSplitter = new UFTFileSplitter(file);
+
+	    ArrayList<byte[]> chunks = fileSplitter.getChunks();
+
+	    ArrayList<UFTPacket> dataPackets = new ArrayList<UFTPacket>();
+	} catch (IOException ioe) {
+	    System.out.println("Could not prepare \"" + file.getName() + "\" for transmission");
+	    System.out.println(ioe.getMessage());
+	}
+	//
+	// NEED A PORT from the listener!
+	//
+
+	// get number of packets
+	// for every chunk in chunks
+	// create a packet with the chunk as data, packet number, and an
+	// increasing sequence number
+	//
+	// dump the packets in the the queue
+	// send them off
+    }
 
     /*
      * Returns true if fileRequest is a valid file to send to the client
