@@ -9,8 +9,7 @@ public interface UFTPacketSpeaker extends Runnable {
 
     public boolean hasData();
 
-    public boolean sendPacket(UFTPacket packet);
+    public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException;
 
-    public void markAsFinished();
 
 }

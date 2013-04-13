@@ -45,15 +45,15 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      */
     public boolean hasData() {
 	// true if the servers reactionqueu has content
-	return ! server.getQueu().isEmpty();
+	return ! server.getSendQueue().isEmpty();
     }
 
 
     /*
      * Try to send a UFTPacket
      */
-    public boolean sendPacket(UFTPacket packet) {
-	return false;
+    public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
+
     }
 
 
@@ -70,7 +70,11 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      */
     public void run() {
 	while (this.server.shouldSend) {
+	    if(this.hasData()) {
 
+	    } else {
+
+	    }
 	}
 
     }

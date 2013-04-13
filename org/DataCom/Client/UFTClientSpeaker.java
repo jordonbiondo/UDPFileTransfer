@@ -14,16 +14,8 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
     UDPFileTransferClient client;
 
 
-    /*
-     * Server socket
-     */
-    DatagramSocket serverSocket;
 
 
-    /*
-     * Should the thread be sending packets?
-     */
-    private boolean shouldBeSending = false;
 
 
     // /////////////////////////////////////////////////////////////////
@@ -34,7 +26,7 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
     /*
      * UFT Packet Listener
      */
-    public UFTClientSpeaker(UDPFileTransferClient server) throws SocketException{
+    public UFTClientSpeaker(UDPFileTransferClient client) {
 	this.client = client;
     }
 
@@ -48,32 +40,37 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
      * Is there Data to send?
      */
     public boolean hasData() {
-	return false;
+	return ! client.getSendQueue().isEmpty();
     }
 
 
     /*
      * Try to send a UFTPacket
      */
-    public boolean sendPacket(UFTPacket packet) {
-	return false;
+    public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
+	byte[] packetData = packet.toBytes();
+	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
+	client.sendSocket.send(sendPacket);
+
     }
 
 
-    /*
-     * Tell the thread to stop sending
-     */
-    public void markAsFinished() {
-	this.shouldBeSending = false;
-    }
 
 
     /*
      * Main Run loop
      */
     public void run() {
-	while (shouldBeSending) {
-
+	System.out.println("RUNNING CLIENT SPEAKER");
+	while(this.hasData()) {
+	    UFTPacket next = client.getSendQueue().poll();
+	    System.out.println("TRYING TO SEND:\n"+next);
+	    try {
+		this.sendPacket(next, client.getSendPort(), client.getServerAddress());
+	    } catch (IOException se) {
+		System.out.println("Failed to send packet, requeueing");
+		this.client.enqueueForSend(next);
+	    }
 	}
 
     }

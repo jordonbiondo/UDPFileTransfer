@@ -16,6 +16,13 @@ public class UDPFileTransferServer {
 
 
     /*
+     * The port to send packets to
+     */
+    private int clientPort = -1;
+
+
+
+    /*
      * Shoule the server listen for packets
      */
     public boolean shouldListen;
@@ -104,8 +111,12 @@ public class UDPFileTransferServer {
 	reactionQueue.add(p);
     }
 
-    public ConcurrentLinkedQueue getQueu() {
+    public ConcurrentLinkedQueue getReceivedQueue() {
 	return this.reactionQueue;
+    }
+
+    public ConcurrentLinkedQueue getSendQueue() {
+	return this.sendQueue;
     }
 
     /*
@@ -114,32 +125,37 @@ public class UDPFileTransferServer {
     public void start() {
 	packetListener.start();
 	packetSender.start();
-
     }
 
 
-    public void prepareFileTransmission(File file) {
+    public ArrayList<UFTPacket> prepareFileTransmission(File file) {
+	// ensure port has been received
+	if (this.clientPort < 0) return null;
+
 	try {
 	    fileSplitter = new UFTFileSplitter(file);
 
 	    ArrayList<byte[]> chunks = fileSplitter.getChunks();
 
 	    ArrayList<UFTPacket> dataPackets = new ArrayList<UFTPacket>();
+
+	    int sequenceNumber = 0;
+	    for (byte[] chunk : chunks) {
+
+		UFTHeader header = new UFTHeader(this.listenPort, this.clientPort, UFTHeaderType.DAT,
+						 sequenceNumber, chunks.size(), chunk.length);
+		UFTPacket packet = new UFTPacket(header, chunk);
+		dataPackets.add(packet);
+
+		sequenceNumber++;
+	    }
+	    return dataPackets;
+
 	} catch (IOException ioe) {
 	    System.out.println("Could not prepare \"" + file.getName() + "\" for transmission");
 	    System.out.println(ioe.getMessage());
 	}
-	//
-	// NEED A PORT from the listener!
-	//
-
-	// get number of packets
-	// for every chunk in chunks
-	// create a packet with the chunk as data, packet number, and an
-	// increasing sequence number
-	//
-	// dump the packets in the the queue
-	// send them off
+	return null;
     }
 
     /*

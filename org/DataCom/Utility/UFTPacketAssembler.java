@@ -57,4 +57,13 @@ public class UFTPacketAssembler {
 
 	return new DatagramPacket(packetBytes, packetBytes.length);
     }
+
+
+    /*
+     * Assemble a datagram packet from a complete UFTPacket
+     */
+    public static DatagramPacket assemble(UFTPacket packet) {
+	byte[] packetBytes = packet.toBytes();
+	return new DatagramPacket(packetBytes, packetBytes.length);
+    }
 }

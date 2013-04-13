@@ -43,13 +43,12 @@ public class UFTClientListener implements UFTPacketListener {
 	while(client.shouldListen) {
 	    recveivedData = new byte[UFTPacket.BYTE_SIZE];
 	    try {
-		System.out.println("receiving......");
+		System.out.println("Listener: receiving......");
 		//make a data packet
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
-		// try to fill it
 		clientSocket.receive(dataPacket);
 		onPacketReceive(dataPacket);
-		System.out.println("received");
+		System.out.println("Listener: received");
 	    } catch(Exception e) {
 		e.printStackTrace();
 	    }
@@ -59,6 +58,16 @@ public class UFTClientListener implements UFTPacketListener {
 
 
     public void onPacketReceive(DatagramPacket dataPacket) {
+	try {
+
+	    UFTPacket packet = new UFTPacket(dataPacket);
+	    System.out.println("Success receiving:");
+	    System.out.println(packet);
+	} catch (MalformedPacketException mpe) {
+	    System.out.println(mpe.getMessage());
+
+	}
+
 	// // fill packet wrapper
 	// try {
 	//     UFTPacket packet = new UFTPacket(dataPacket);
