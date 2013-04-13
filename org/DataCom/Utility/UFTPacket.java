@@ -82,7 +82,6 @@ public class UFTPacket {
 	}
     }
 
-
     /*
      * Create a UFTPacket from a header and data.
      */
@@ -121,6 +120,23 @@ public class UFTPacket {
 	return new String(data);
     }
 
+
+    /*
+     * Return the byte representation of the packet
+     */
+    public byte[] toBytes() {
+
+	byte[] packetBytes = new byte[UFTHeader.BYTE_SIZE + this.data.length];
+	byte[] headerBytes = this.getHeader().toBytes();
+
+	for (int i = 0; i < UFTHeader.BYTE_SIZE; i++) {
+	    packetBytes[i] = headerBytes[i];
+	}
+	for (int i = UFTHeader.BYTE_SIZE; i < packetBytes.length; i++) {
+	    packetBytes[i] = data[i-UFTHeader.BYTE_SIZE];
+	}
+	return packetBytes;
+    }
 
     /*
      * To String.
