@@ -15,12 +15,21 @@ default: server
 clean:
 	rm -f $(server-dir)/*.class $(client-dir)/*.class $(utility-dir)/*.class
 
+
 ## #################################################################
 ## Server
 ## #################################################################
 server: $(server-exec)
 
+
 $(server-exec): $(server-dir)/*.java $(utility-dir)/*.java
+	javac $^
+
+
+## #################################################################
+## Utility
+## #################################################################
+utility: $(utility-dir)/*.java
 	javac $^
 
 
@@ -35,6 +44,7 @@ tests: server client $(testing-dir)/*.java
 ## Client
 ## #################################################################
 client: $(client-exec)
+
 
 $(client-exec): $(client-dir)/*.java $(utility-dir)/*.java
 	javac $^
