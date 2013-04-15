@@ -60,8 +60,11 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
 	byte[] packetData = packet.toBytes();
 	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
 	// send it
+
+	Random random = new Random();
 	Debug.pln("sending packet: "+ packet);
 	this.server.sendSocket.send(sendPacket);
+	this.server.enqueueForSend(packet);
     }
 
 
@@ -70,7 +73,7 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      * Main Run loop
      */
     public void run() {
-	while(this.hasData()) {
+	while(this.hasData() && this.server.shouldSend) {
 	    UFTPacket next = server.getSendQueue().poll();
 	    try {
 		this.sendPacket(next, server.getSendPort(), server.getFriendAddress());
@@ -79,7 +82,6 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
 		this.server.enqueueForSend(next);
 	    }
 	}
-
 
     }
 

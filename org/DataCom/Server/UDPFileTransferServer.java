@@ -50,6 +50,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	}
     }
 
+    @Override
     public void notifyResponder() {
 	if (packetResponder.getState() == Thread.State.TERMINATED) {
 	    packetResponder = new Thread(new UFTServerResponder(this));
@@ -76,9 +77,20 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
      * End the current file transfer session
      */
     public void endSession() {
-	this.reactionQueue.clear();
-	this.sendQueue.clear();
-	this.currentRequest = null;
+	try {
+	    this.shouldSend = false;
+	    this.shouldListen = false;
+	    this.reactionQueue.clear();
+	    this.sendQueue.clear();
+	    this.currentRequest = null;
+	    this.packetSender.join();
+	    this.packetListener.join();
+	    this.shouldSend = true;
+	    this.shouldListen = true;
+	} catch(InterruptedException ie) {
+	    Debug.err("Thread join failed");
+	}
+
     }
 
 

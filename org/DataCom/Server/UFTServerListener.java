@@ -49,7 +49,6 @@ public class UFTServerListener implements UFTPacketListener {
 	    } catch(Exception e) {
 		e.printStackTrace();
 	    }
-
 	}
     }
 

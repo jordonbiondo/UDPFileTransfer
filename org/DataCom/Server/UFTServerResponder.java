@@ -37,6 +37,7 @@ public class UFTServerResponder extends UFTPacketResponder {
 	Debug.pln("END received, resetting session...");
 	UDPFileTransferServer server = (UDPFileTransferServer)master;
 	server.endSession();
+	
     }
 
     /**

@@ -115,8 +115,12 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
 	} catch (FileNotFoundException fnfe) {
 	    Debug.err("file not found " + fnfe.getMessage());
+	    System.exit(1);
 	} catch(IOException ioe) {
 	    Debug.err("Could not write file " + ioe.getMessage());
+	    System.exit(1);
+	} finally {
+	    System.exit(0);
 	}
     }
 
@@ -126,7 +130,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	UFTPacket packet = new UFTPacket(header, new byte[1]);
 	this.sendQueue.clear();
 	enqueueForSend(packet);
-
+	//
 	notifySpeaker();
     }
 
