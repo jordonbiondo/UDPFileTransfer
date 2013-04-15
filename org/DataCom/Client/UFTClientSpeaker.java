@@ -48,23 +48,25 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
      * Try to send a UFTPacket
      */
     public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
+	// ensure checksum
+	packet.prepareForSend();
+	//create datagram packet
 	byte[] packetData = packet.toBytes();
 	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
+	// send it
+	Debug.pln("sending packet: "+packet.getHeader().getChecksum());
 	client.sendSocket.send(sendPacket);
 
     }
 
 
 
-
     /*
-     * Main Run loop
+     * Thread run loop
      */
     public void run() {
-	System.out.println("RUNNING CLIENT SPEAKER");
 	while(this.hasData()) {
 	    UFTPacket next = client.getSendQueue().poll();
-	    System.out.println("TRYING TO SEND:\n"+next);
 	    try {
 		this.sendPacket(next, client.getSendPort(), client.getServerAddress());
 	    } catch (IOException se) {
@@ -74,6 +76,4 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 	}
 
     }
-
-
 }
