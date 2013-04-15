@@ -31,7 +31,7 @@ public class UFTClientListener implements UFTPacketListener {
      */
     public UFTClientListener(UDPFileTransferClient client) throws SocketException{
 	this.client = client;
-	this.clientSocket = new DatagramSocket(client.getSendPort());
+	this.clientSocket = new DatagramSocket(client.getListenPort());
     }
 
 

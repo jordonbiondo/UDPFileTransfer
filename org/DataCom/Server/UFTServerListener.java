@@ -7,6 +7,8 @@ import java.net.*;
 import org.DataCom.Utility.*;
 
 
+
+
 public class UFTServerListener implements UFTPacketListener {
 
     /*
@@ -43,13 +45,11 @@ public class UFTServerListener implements UFTPacketListener {
 	while(server.shouldListen) {
 	    recveivedData = new byte[UFTPacket.BYTE_SIZE];
 	    try {
-		System.out.println("receiving......");
 		//make a data packet
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
 		// try to fill it
 		serverSocket.receive(dataPacket);
 		onPacketReceive(dataPacket);
-		System.out.println("received");
 	    } catch(Exception e) {
 		e.printStackTrace();
 	    }
@@ -58,19 +58,32 @@ public class UFTServerListener implements UFTPacketListener {
     }
 
 
+    /*
+     * When a packet is received, do...
+     */
     public void onPacketReceive(DatagramPacket dataPacket) {
-	// fill packet wrapper
 	try {
 	    UFTPacket packet = new UFTPacket(dataPacket);
-	    server.enqueueReaction(packet);
+
+	    Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum());
+	    Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
+
+	    if (UFTPacket.checksumIsValid(packet)) {
+		server.enqueueReaction(packet);
+	    } else {
+		throw new MalformedPacketException("Checksum validation failure!");
+	    }
 	} catch(MalformedPacketException mpe) {
 	    onPacketError(dataPacket, mpe);
 	}
     }
 
 
+    /*
+     * When a packet contains an error do...
+     */
     public void onPacketError(DatagramPacket packet, Exception e) {
-	System.out.println("Shit, packet error");
+	Debug.err(e.getMessage());
 	e.printStackTrace();
     }
 

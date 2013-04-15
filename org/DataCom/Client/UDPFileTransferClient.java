@@ -85,8 +85,6 @@ public class UDPFileTransferClient {
     public void requestAFile() {
 	System.out.print("Enter file name: ");
 	String input = new Scanner(System.in).next();
-	System.out.println("Requesting \"" + input + "\"");
-
 	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.GET, 1, 1, input.getBytes().length);
 	UFTPacket packet = new UFTPacket(header, input.getBytes());
 	enqueueForSend(packet);
@@ -165,7 +163,8 @@ public class UDPFileTransferClient {
 
     public static void main(String[] args) {
 	try {
-	    UDPFileTransferClient client = new UDPFileTransferClient(9090, InetAddress.getByName("127.0.0.1"));
+
+	    UDPFileTransferClient client = new UDPFileTransferClient(9898, InetAddress.getByName("127.0.0.1"));
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {
 	    System.out.println(uhe.getMessage());
