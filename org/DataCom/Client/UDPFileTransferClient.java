@@ -14,6 +14,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
+    private String currentRequest;
 
     /*
      * New Client
@@ -27,7 +28,6 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
 
 	    this.sendSocket = new DatagramSocket();
-
 	    // threads
 	    this.packetListener = new Thread(new UFTClientListener(this));
 	    this.packetSender = new Thread(new UFTClientSpeaker(this));
@@ -51,11 +51,11 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     public void requestAFile() {
 	System.out.print("Enter file name: ");
 	String input = new Scanner(System.in).next();
+	this.currentRequest = input;
 	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.GET, 1, 1, input.getBytes().length);
 	UFTPacket packet = new UFTPacket(header, input.getBytes());
 	enqueueForSend(packet);
 	notifySpeaker();
-
     }
 
 

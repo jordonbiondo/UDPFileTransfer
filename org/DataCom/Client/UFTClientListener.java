@@ -43,10 +43,8 @@ public class UFTClientListener implements UFTPacketListener {
 	while(client.shouldListen) {
 	    recveivedData = new byte[UFTPacket.BYTE_SIZE];
 	    try {
-		System.out.println("Listener: receiving......");
-		//make a data packet
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
-		clientSocket.receive(dataPacket);
+		
 		onPacketReceive(dataPacket);
 		System.out.println("Listener: received");
 	    } catch(Exception e) {

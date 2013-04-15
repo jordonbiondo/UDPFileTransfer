@@ -17,10 +17,6 @@ public class UFTServerListener implements UFTPacketListener {
     UDPFileTransferServer server;
 
 
-    /*
-     * Server socket
-     */
-    DatagramSocket serverSocket;
 
 
     // /////////////////////////////////////////////////////////////////
@@ -33,7 +29,7 @@ public class UFTServerListener implements UFTPacketListener {
      */
     public UFTServerListener(UDPFileTransferServer server) throws SocketException{
 	this.server = server;
-	this.serverSocket = new DatagramSocket(server.getListenPort());
+	this.server.listenSocket = new DatagramSocket(server.getListenPort());
     }
 
 
@@ -48,7 +44,7 @@ public class UFTServerListener implements UFTPacketListener {
 		//make a data packet
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
 		// try to fill it
-		serverSocket.receive(dataPacket);
+		this.server.listenSocket.receive(dataPacket);
 		onPacketReceive(dataPacket);
 	    } catch(Exception e) {
 		e.printStackTrace();
