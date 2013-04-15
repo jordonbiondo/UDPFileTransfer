@@ -24,6 +24,8 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	    this.listenPort = listenPort;
 	    this.packetListener = new Thread(new UFTServerListener(this));
 	    this.packetSender = new Thread(new UFTServerSpeaker(this));
+
+	    this.sendSocket = new DatagramSocket();
 	} catch (SocketException e) {
 	    Debug.err("Cannot start server on port " + listenPort);
 	    e.printStackTrace();
@@ -45,6 +47,20 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	    packetSender.start();
 	}
     }
+
+    public boolean prepareSendSocket(int sendPort) {
+	try {
+	    this.setSendPort(sendPort);
+	    if( ! this.sendSocket.isBound()) {
+		this.sendSocket = new DatagramSocket(this.getSendPort());
+	    }
+	} catch (SocketException se) {
+	    Debug.err("Couldn't start server sned socket on " + sendPort);
+	    return false;
+	}
+	return true;
+    }
+
 
 
 

@@ -112,6 +112,14 @@ public abstract class UDPFileTransferNode {
     public int getSendPort() {
 	return this.sendPort;
     }
+    
+
+    /**
+     * Set the send prot
+     */
+    public void setSendPort(int port) {
+	this.sendPort = port;
+    }
 
 
     /**
@@ -127,6 +135,13 @@ public abstract class UDPFileTransferNode {
      */
     public InetAddress getFriendAddress() {
 	return this.friendAddress;
+    }
+
+    /**
+     * Set the friend node address
+     */
+    public void setFriendAddress(InetAddress address) {
+	this.friendAddress = address;
     }
 
 

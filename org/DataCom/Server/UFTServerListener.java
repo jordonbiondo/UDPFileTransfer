@@ -63,9 +63,22 @@ public class UFTServerListener implements UFTPacketListener {
 
 	    Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum());
 	    Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
+	    Debug.pln("Data is "+ packet.getDataAsString());
+	    
+	    this.server.setSendPort(packet.getHeader().sourcePort);
+	    this.server.setFriendAddress(dataPacket.getAddress());
 
 	    if (UFTPacket.checksumIsValid(packet)) {
 		server.enqueueReaction(packet);
+		if(server.acceptsRequest(packet.getDataAsString())) {
+		    Debug.pln("Accepted");
+		    File file = new File(packet.getDataAsString());
+		    for (UFTPacket fPack : server.prepareFileTransmission(file)) {
+			server.enqueueForSend(fPack);
+		    }
+		} else {
+		    Debug.pln("not accepted");
+		}
 		server.notifySpeaker();
 	    } else {
 		throw new MalformedPacketException("Checksum validation failure!");

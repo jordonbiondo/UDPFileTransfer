@@ -53,14 +53,15 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      * Try to send a UFTPacket
      */
     public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
+	this.server.prepareSendSocket(port);
 	// ensure checksum
 	packet.prepareForSend();
 	//create datagram packet
 	byte[] packetData = packet.toBytes();
-	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
+	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, this.server.getSendPort());
 	// send it
 	Debug.pln("sending packet: "+packet.getHeader().getChecksum());
-	server.sendSocket.send(sendPacket);
+	this.server.sendSocket.send(sendPacket);
     }
 
 

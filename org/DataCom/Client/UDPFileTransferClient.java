@@ -19,10 +19,11 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     /*
      * New Client
      */
-    public UDPFileTransferClient(int sendPort, InetAddress serverAddress) {
+    public UDPFileTransferClient(int listenPort, int sendPort, InetAddress serverAddress) {
 	super();
 	try {
 	    // args
+	    this.listenPort = listenPort;
 	    this.sendPort = sendPort;
 	    this.friendAddress = serverAddress;
 
@@ -76,7 +77,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     public static void main(String[] args) {
 	try {
 
-	    UDPFileTransferClient client = new UDPFileTransferClient(9898, InetAddress.getByName("127.0.0.1"));
+	    UDPFileTransferClient client = new UDPFileTransferClient(9292, 9898, InetAddress.getByName("127.0.0.1"));
 	    client.start();
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {

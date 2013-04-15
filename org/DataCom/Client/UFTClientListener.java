@@ -31,7 +31,7 @@ public class UFTClientListener implements UFTPacketListener {
      */
     public UFTClientListener(UDPFileTransferClient client) throws SocketException{
 	this.client = client;
-	this.clientSocket = new DatagramSocket(client.getListenPort());
+	this.client.listenSocket = new DatagramSocket(client.getListenPort());
     }
 
 
@@ -44,7 +44,7 @@ public class UFTClientListener implements UFTPacketListener {
 	    recveivedData = new byte[UFTPacket.BYTE_SIZE];
 	    try {
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
-		
+		this.client.listenSocket.receive(dataPacket);
 		onPacketReceive(dataPacket);
 		System.out.println("Listener: received");
 	    } catch(Exception e) {
@@ -57,10 +57,11 @@ public class UFTClientListener implements UFTPacketListener {
 
     public void onPacketReceive(DatagramPacket dataPacket) {
 	try {
-
+	    
 	    UFTPacket packet = new UFTPacket(dataPacket);
-	    System.out.println("Success receiving:");
-	    System.out.println(packet);
+	    Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum());
+	    Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
+	    Debug.pln("Data is "+ packet.getDataAsString());
 	} catch (MalformedPacketException mpe) {
 	    System.out.println(mpe.getMessage());
 
