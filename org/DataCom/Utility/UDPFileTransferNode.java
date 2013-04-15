@@ -64,6 +64,11 @@ public abstract class UDPFileTransferNode {
      */
     protected  ConcurrentLinkedQueue<UFTPacket> sendQueue;
 
+    /**
+     * Acknowledged Packets
+     */
+    public HashMap<String, Boolean> acknowledged;
+
 
 
     /**
@@ -77,6 +82,11 @@ public abstract class UDPFileTransferNode {
      */
     protected Thread packetSender;
 
+    /**
+     * Thread that response to packets
+     */
+    protected Thread packetResponder;
+
 
     /**
      * Constructor
@@ -84,6 +94,7 @@ public abstract class UDPFileTransferNode {
     public UDPFileTransferNode() {
 	this.reactionQueue = new ConcurrentLinkedQueue<UFTPacket>();
 	this.sendQueue = new ConcurrentLinkedQueue<UFTPacket>();
+	this.acknowledged = new HashMap<String, Boolean>();
 	this.shouldListen = true;
 	this.shouldSend = true;
     }
@@ -172,9 +183,15 @@ public abstract class UDPFileTransferNode {
 
 
     /**
-     * Try waking up the server speaker
+     * Try waking up the node speaker
      */
     public abstract void notifySpeaker();
+
+
+    /**
+     * Try waking up the node responder
+     */
+    public abstract void notifyResponder();
 
 
 
@@ -184,6 +201,7 @@ public abstract class UDPFileTransferNode {
     public void start() {
 	packetListener.start();
 	packetSender.start();
+	packetResponder.start();
     }
 
 }

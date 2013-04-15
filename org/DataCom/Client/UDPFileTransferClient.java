@@ -16,6 +16,8 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
     private String currentRequest;
 
+    public UFTPacket[] fileDataPackets = new UFTPacket[1];
+
     /*
      * New Client
      */
@@ -29,9 +31,13 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
 
 	    this.sendSocket = new DatagramSocket();
+
+	    
+
 	    // threads
 	    this.packetListener = new Thread(new UFTClientListener(this));
 	    this.packetSender = new Thread(new UFTClientSpeaker(this));
+	    this.packetResponder = new Thread(new UFTClientResponder(this));
 
 	} catch (SocketException e) {
 	    Debug.err("Cannot start client on port " + sendPort);
@@ -69,6 +75,61 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	    packetSender.start();
 	}
     }
+
+
+    /*
+     * Start the responder thrad if it's dead
+     */
+    public void notifyResponder() {
+	if (packetResponder.getState() == Thread.State.TERMINATED) {
+	    packetResponder = new Thread(new UFTClientResponder(this));
+	    packetResponder.start();
+       	}
+    }
+
+
+    @Override
+    public void start() {
+	packetSender.start();
+	packetListener.start();
+	packetResponder.start();
+    }
+
+
+    /*
+     * Write the received data to a file
+     */
+    public void writeFileAndEnd() {
+
+	Debug.pln("Ending client, writing file");
+
+	endConnection();
+
+	try {
+	    File output = new File(currentRequest+"OUT");
+	    FileOutputStream stream = new FileOutputStream(output);
+	    for (UFTPacket packet : this.fileDataPackets) {
+		stream.write(packet.getData());
+	    }
+	    stream.close();
+
+	} catch (FileNotFoundException fnfe) {
+	    Debug.err("file not found " + fnfe.getMessage());
+	} catch(IOException ioe) {
+	    Debug.err("Could not write file " + ioe.getMessage());
+	}
+    }
+
+
+    private void endConnection() {
+	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.END, 1, 1, 1);
+	UFTPacket packet = new UFTPacket(header, new byte[1]);
+	this.sendQueue.clear();
+	enqueueForSend(packet);
+
+	notifySpeaker();
+    }
+
 
     // /////////////////////////////////////////////////////////////////
     //   Client main

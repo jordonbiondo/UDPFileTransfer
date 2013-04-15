@@ -69,9 +69,16 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 	    UFTPacket next = client.getSendQueue().poll();
 	    try {
 		this.sendPacket(next, client.getSendPort(), client.getFriendAddress());
+		if (this.client.acknowledged.get(next.getDataAsString()) == null) {
+		    //this.client.enqueueForSend(next);
+		}  else {
+		    Debug.pln("WE GOT AN ACK!");
+		}
 	    } catch (IOException se) {
 		System.out.println("Failed to send packet, requeueing");
 		this.client.enqueueForSend(next);
+	    } finally {
+
 	    }
 	}
 

@@ -10,12 +10,14 @@ import org.DataCom.Utility.*;
 public class UDPFileTransferServer extends UDPFileTransferNode {
 
 
+
+    public String currentRequest = null;
     // /////////////////////////////////////////////////////////////////
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * Constructor
      */
     public UDPFileTransferServer(int listenPort) {
@@ -24,7 +26,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	    this.listenPort = listenPort;
 	    this.packetListener = new Thread(new UFTServerListener(this));
 	    this.packetSender = new Thread(new UFTServerSpeaker(this));
-
+	    this.packetResponder = new Thread(new UFTServerResponder(this));
 	    this.sendSocket = new DatagramSocket();
 	} catch (SocketException e) {
 	    Debug.err("Cannot start server on port " + listenPort);
@@ -37,7 +39,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
     //   Methods
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Try waking up the server speaker
      */
     @Override
@@ -47,6 +49,14 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	    packetSender.start();
 	}
     }
+
+    public void notifyResponder() {
+	if (packetResponder.getState() == Thread.State.TERMINATED) {
+	    packetResponder = new Thread(new UFTServerResponder(this));
+	    packetResponder.start();
+	}
+    }
+
 
     public boolean prepareSendSocket(int sendPort) {
 	try {
@@ -62,8 +72,20 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
     }
 
 
+    /***
+     * End the current file transfer session
+     */
+    public void endSession() {
+	this.reactionQueue.clear();
+	this.sendQueue.clear();
+	this.currentRequest = null;
+    }
 
 
+
+    /**
+     * Prepare a file for transmission
+     */
     public ArrayList<UFTPacket> prepareFileTransmission(File file) {
 	// ensure port has been received
 	if (this.sendPort < 0) return null;
@@ -75,7 +97,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 
 	    ArrayList<UFTPacket> dataPackets = new ArrayList<UFTPacket>();
 
-	    int sequenceNumber = 0;
+	    int sequenceNumber = 1;
 	    for (byte[] chunk : chunks) {
 
 		UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.DAT,
@@ -94,7 +116,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
 	return null;
     }
 
-    /*
+    /**
      * Returns true if fileRequest is a valid file to send to the client
      */
     public boolean acceptsRequest(String fileRequest) {

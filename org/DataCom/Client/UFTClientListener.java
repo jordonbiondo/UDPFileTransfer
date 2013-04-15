@@ -46,41 +46,42 @@ public class UFTClientListener implements UFTPacketListener {
 		DatagramPacket dataPacket = new DatagramPacket(recveivedData, recveivedData.length);
 		this.client.listenSocket.receive(dataPacket);
 		onPacketReceive(dataPacket);
-		System.out.println("Listener: received");
 	    } catch(Exception e) {
 		e.printStackTrace();
 	    }
-
 	}
     }
 
 
     public void onPacketReceive(DatagramPacket dataPacket) {
 	try {
-	    
 	    UFTPacket packet = new UFTPacket(dataPacket);
-	    Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum());
-	    Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
-	    Debug.pln("Data is "+ packet.getDataAsString());
+	    Debug.pln("received packet: "+packet.getHeader().getChecksum() + " | " + packet.getHeader().type.name());
+	    //Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum() + "type: " + packet.getHeader().type.name());
+	    //Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
+	    //	    Debug.pln("Data is "+ packet.getDataAsString());
+	    if (UFTPacket.checksumIsValid(packet)) {
+		this.client.enqueueReaction(packet);
+		this.client.notifyResponder();
+	    } else {
+	    	throw new MalformedPacketException("Checksum validation failure!");
+	    }
 	} catch (MalformedPacketException mpe) {
-	    System.out.println(mpe.getMessage());
-
+	    onPacketError(dataPacket, mpe);
 	}
-
-	// // fill packet wrapper
-	// try {
-	//     UFTPacket packet = new UFTPacket(dataPacket);
-	//     client.enqueueReaction(packet);
-	// } catch(MalformedPacketException mpe) {
-	//     onPacketError(dataPacket, mpe);
-	// }
     }
 
 
+
+    /*
+     * When a packet contains an error do...
+     */
     public void onPacketError(DatagramPacket packet, Exception e) {
-	System.out.println("Shit, packet error");
+	Debug.err(e.getMessage());
 	e.printStackTrace();
     }
+
+
 
 
 }

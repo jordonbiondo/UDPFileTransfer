@@ -58,9 +58,9 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
 	packet.prepareForSend();
 	//create datagram packet
 	byte[] packetData = packet.toBytes();
-	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, this.server.getSendPort());
+	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
 	// send it
-	Debug.pln("sending packet: "+packet.getHeader().getChecksum());
+	Debug.pln("sending packet: "+ packet);
 	this.server.sendSocket.send(sendPacket);
     }
 
