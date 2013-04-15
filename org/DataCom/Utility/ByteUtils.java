@@ -2,6 +2,7 @@ package org.DataCom.Utility;
 
 import java.math.*;
 import java.nio.ByteBuffer;
+import java.util.zip.CRC32;
 
 /*
  * Byte Utils
@@ -28,6 +29,18 @@ public class ByteUtils {
 	}
 	ByteBuffer buffer = ByteBuffer.wrap(bytes);
 	return buffer.getLong();
+    }
+
+
+
+    /*
+     * Get the crc32 checksum of an array of bytes
+     */
+    public static long computeCRCChecksum(final byte[] data) {
+	// mmmm look at that double brace badassery
+	return new CRC32() {{
+	    update(data);
+	}}.getValue();
     }
 
 }

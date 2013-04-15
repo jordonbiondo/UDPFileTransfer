@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.zip.CRC32;
 
 
 /*
@@ -21,7 +20,7 @@ public class UFTHeader {
     /*
      * Header type.
      */
-    UFTHeaderType type;
+    public final UFTHeaderType type;
 
 
     /*
@@ -86,11 +85,9 @@ public class UFTHeader {
      * Computer the checksum with CRC32
      */
     public void computeChecksum(final byte[] data) {
-	this.checksum = new CRC32() {{
-	    update(data);
-	}}.getValue();
+	this.checksum = ByteUtils.computeCRCChecksum(data);
     }
-
+    
 
     /*
      * Get Header checksum

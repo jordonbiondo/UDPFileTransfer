@@ -43,8 +43,6 @@ public class UFTPacket {
 	// header bytes are from 0 - header byte size
 	byte[] headerData = Arrays.copyOfRange(entireData, 0, UFTHeader.BYTE_SIZE);
 
-	// the rest of the bytes is the data
-	byte[] packetData = Arrays.copyOfRange(entireData, UFTHeader.BYTE_SIZE, entireData.length);
 
 	// get the packet's type
 	UFTHeaderType packetType = UFTHeaderType.fromBytes(Arrays.copyOfRange(headerData, 0, 4));
@@ -71,6 +69,13 @@ public class UFTPacket {
 	    UFTHeader header = new UFTHeader(sourcePort, destinationPort, packetType,
 					     packetNumber, totalPackets, dataSize);
 	    header.overrideChecksum(checksum);
+
+	    // Get the data from the rest of the bytes,
+	    //
+	    // cuts off the zeros that datagrampacket is adding on for god knows why
+	    //
+	    byte[] packetData = Arrays.copyOfRange(entireData, UFTHeader.BYTE_SIZE, UFTHeader.BYTE_SIZE + dataSize);
+
 	    // set this instances header and data
 	    this.header = header;
 	    this.data = packetData;
@@ -97,6 +102,9 @@ public class UFTPacket {
     // /////////////////////////////////////////////////////////////////
 
 
+    public void prepareForSend() {
+	this.header.computeChecksum(this.data);
+    }
     /*
      * Return the packet header.
      */
@@ -137,6 +145,15 @@ public class UFTPacket {
 	}
 	return packetBytes;
     }
+
+
+    /*
+     * Return true if a recompuation of the checksum comes out the same as it's current value
+     */
+    public static boolean checksumIsValid(UFTPacket packet) {
+	return packet.getHeader().getChecksum() == ByteUtils.computeCRCChecksum(packet.getData());
+    }
+
 
     /*
      * To String.
