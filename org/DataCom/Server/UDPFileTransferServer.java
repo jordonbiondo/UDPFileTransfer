@@ -7,61 +7,7 @@ import java.net.*;
 import org.DataCom.Utility.*;
 
 
-public class UDPFileTransferServer {
-
-    /*
-     * Port to listen for packets on
-     */
-    private int listenPort;
-
-
-    /*
-     * The port to send packets to
-     */
-    private int clientPort = -1;
-
-
-
-    /*
-     * Shoule the server listen for packets
-     */
-    public boolean shouldListen;
-
-
-    /*
-     * Should the server be sending packets
-     */
-    public boolean shouldSend;
-
-
-    /*
-     * File splitter
-     */
-    private UFTFileSplitter fileSplitter;
-
-
-    /*
-     * Received packet queue
-     */
-    private ConcurrentLinkedQueue<UFTPacket> reactionQueue;
-
-
-    /*
-     * Packets waiting to be sent
-     */
-    private ConcurrentLinkedQueue<UFTPacket> sendQueue;
-
-
-    /*
-     * Packet Listener thread
-     */
-    Thread packetListener;
-
-
-    /*
-     * Packet Send Thread
-     */
-    Thread packetSender;
+public class UDPFileTransferServer extends UDPFileTransferNode {
 
 
     // /////////////////////////////////////////////////////////////////
@@ -72,15 +18,14 @@ public class UDPFileTransferServer {
     /*
      * Constructor
      */
-    public UDPFileTransferServer(int port) {
+    public UDPFileTransferServer(int listenPort) {
+	super();
 	try {
-	    this.reactionQueue = new ConcurrentLinkedQueue<UFTPacket>();
-	    this.listenPort = port;
+	    this.listenPort = listenPort;
 	    this.packetListener = new Thread(new UFTServerListener(this));
 	    this.packetSender = new Thread(new UFTServerSpeaker(this));
-	    this.shouldListen = true;
 	} catch (SocketException e) {
-	    System.out.println("Cannot start server on port " + port);
+	    Debug.err("Cannot start server on port " + listenPort);
 	    e.printStackTrace();
 	}
     }
@@ -90,50 +35,25 @@ public class UDPFileTransferServer {
     //   Methods
     // /////////////////////////////////////////////////////////////////
 
-
     /*
-     * Set listen port
+     * Try waking up the server speaker
      */
-    public void setListenPort(int port) {
-	this.listenPort = port;
+    @Override
+    public void notifySpeaker() {
+	if (packetSender.getState() == Thread.State.TERMINATED) {
+	    packetSender = new Thread(new UFTServerSpeaker(this));
+	    packetSender.start();
+	}
     }
 
-
-    /*
-     * Get listen port
-     */
-    public int getListenPort() {
-	return this.listenPort;
-    }
-
-
-    public void enqueueReaction(UFTPacket p) {
-	reactionQueue.add(p);
-    }
-
-    public ConcurrentLinkedQueue getReceivedQueue() {
-	return this.reactionQueue;
-    }
-
-    public ConcurrentLinkedQueue getSendQueue() {
-	return this.sendQueue;
-    }
-
-    /*
-     * Start the server
-     */
-    public void start() {
-	packetListener.start();
-	packetSender.start();
-    }
 
 
     public ArrayList<UFTPacket> prepareFileTransmission(File file) {
 	// ensure port has been received
-	if (this.clientPort < 0) return null;
+	if (this.sendPort < 0) return null;
 
 	try {
-	    fileSplitter = new UFTFileSplitter(file);
+	    UFTFileSplitter fileSplitter = new UFTFileSplitter(file);
 
 	    ArrayList<byte[]> chunks = fileSplitter.getChunks();
 
@@ -142,7 +62,7 @@ public class UDPFileTransferServer {
 	    int sequenceNumber = 0;
 	    for (byte[] chunk : chunks) {
 
-		UFTHeader header = new UFTHeader(this.listenPort, this.clientPort, UFTHeaderType.DAT,
+		UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.DAT,
 						 sequenceNumber, chunks.size(), chunk.length);
 		UFTPacket packet = new UFTPacket(header, chunk);
 		dataPackets.add(packet);

@@ -30,7 +30,7 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
     /*
      * UFT Packet Listener
      */
-    public UFTServerSpeaker(UDPFileTransferServer server) throws SocketException{
+    public UFTServerSpeaker(UDPFileTransferServer server) {
 	this.server = server;
     }
 
@@ -53,29 +53,32 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      * Try to send a UFTPacket
      */
     public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
-
+	// ensure checksum
+	packet.prepareForSend();
+	//create datagram packet
+	byte[] packetData = packet.toBytes();
+	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
+	// send it
+	Debug.pln("sending packet: "+packet.getHeader().getChecksum());
+	server.sendSocket.send(sendPacket);
     }
 
-
-    /*
-     * Tell the thread to stop sending
-     */
-    public void markAsFinished() {
-	this.server.shouldSend = false;
-    }
 
 
     /*
      * Main Run loop
      */
     public void run() {
-	while (this.server.shouldSend) {
-	    if(this.hasData()) {
-
-	    } else {
-
+	while(this.hasData()) {
+	    UFTPacket next = server.getSendQueue().poll();
+	    try {
+		this.sendPacket(next, server.getSendPort(), server.getFriendAddress());
+	    } catch (IOException se) {
+		Debug.err("Failed to send packet, requeueing");
+		this.server.enqueueForSend(next);
 	    }
 	}
+
 
     }
 

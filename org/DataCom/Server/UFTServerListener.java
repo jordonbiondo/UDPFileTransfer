@@ -70,6 +70,7 @@ public class UFTServerListener implements UFTPacketListener {
 
 	    if (UFTPacket.checksumIsValid(packet)) {
 		server.enqueueReaction(packet);
+		server.notifySpeaker();
 	    } else {
 		throw new MalformedPacketException("Checksum validation failure!");
 	    }

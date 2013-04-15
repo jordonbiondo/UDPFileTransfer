@@ -8,66 +8,32 @@ import java.net.*;
 import org.DataCom.Utility.*;
 
 
-public class UDPFileTransferClient {
-
-    private int sendPort;
-
-    private InetAddress serverAddress;
-
-    private int listenPort;
-
-    public boolean shouldListen;
-
-    public boolean shouldSend;
-
-    public  DatagramSocket sendSocket;
-
-    public DatagramSocket listenSocket;
-
-    public Thread packetSender;
-
-    Thread packetListener;
-
-    /*
-     * Received packet queue
-     */
-    private ConcurrentLinkedQueue<UFTPacket> reactionQueue;
-
-
-    /*
-     * Packets waiting to be sent
-     */
-    private ConcurrentLinkedQueue<UFTPacket> sendQueue;
-
+public class UDPFileTransferClient extends UDPFileTransferNode {
 
     // /////////////////////////////////////////////////////////////////
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
 
-    public UDPFileTransferClient(int port, InetAddress serverAddress) {
+    /*
+     * New Client
+     */
+    public UDPFileTransferClient(int sendPort, InetAddress serverAddress) {
+	super();
 	try {
 	    // args
-	    this.sendPort = port;
-	    this.serverAddress = serverAddress;
+	    this.sendPort = sendPort;
+	    this.friendAddress = serverAddress;
 
-	    // packet queues
-	    this.reactionQueue = new ConcurrentLinkedQueue<UFTPacket>();
-	    this.sendQueue = new ConcurrentLinkedQueue<UFTPacket>();
-	    //this.listenSocket = new DatagramSocket(this.listenPort);
+
 	    this.sendSocket = new DatagramSocket();
 
 	    // threads
 	    this.packetListener = new Thread(new UFTClientListener(this));
 	    this.packetSender = new Thread(new UFTClientSpeaker(this));
 
-	    // states
-	    this.shouldSend = true;
-	    this.shouldListen = true;
-	    this.start();
-
 	} catch (SocketException e) {
-	    System.out.println("Cannot start client on port " + port);
+	    Debug.err("Cannot start client on port " + sendPort);
 	    e.printStackTrace();
 	}
 
@@ -93,69 +59,15 @@ public class UDPFileTransferClient {
     }
 
 
+    /*
+     * Start up the speaker thread if it's dead
+     */
     public void notifySpeaker() {
 	if (packetSender.getState() == Thread.State.TERMINATED) {
 	    packetSender = new Thread(new UFTClientSpeaker(this));
 	    packetSender.start();
 	}
     }
-
-    /*
-     * Get Send port
-     */
-    public int getSendPort() {
-	return sendPort;
-    }
-
-
-    /*
-     * Set listen port
-     */
-    public void setListenPort(int port) {
-	this.listenPort = port;
-    }
-
-
-    /*
-     * Get listen port
-     */
-    public int getListenPort() {
-	return this.listenPort;
-    }
-
-    public InetAddress getServerAddress() {
-	return this.serverAddress;
-    }
-
-    public void enqueueForReaction(UFTPacket p) {
-	this.reactionQueue.add(p);
-    }
-
-    public void enqueueForSend(UFTPacket p) {
-	this.sendQueue.add(p);
-    }
-
-
-
-    public ConcurrentLinkedQueue<UFTPacket> getReceivedQueue() {
-	return this.reactionQueue;
-    }
-
-
-    public ConcurrentLinkedQueue<UFTPacket> getSendQueue() {
-	return this.sendQueue;
-    }
-
-
-
-    /*
-     * Start the client
-     */
-    public void start() {
-	packetListener.start();
-	packetSender.start();
-    }
-
 
     // /////////////////////////////////////////////////////////////////
     //   Client main
@@ -165,9 +77,10 @@ public class UDPFileTransferClient {
 	try {
 
 	    UDPFileTransferClient client = new UDPFileTransferClient(9898, InetAddress.getByName("127.0.0.1"));
+	    client.start();
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {
-	    System.out.println(uhe.getMessage());
+	    Debug.err(uhe.getMessage());
 	}
 
     }
