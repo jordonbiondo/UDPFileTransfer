@@ -167,6 +167,14 @@ public class UFTPacket {
     }
 
 
+    /*
+     * simple string for printing
+     */
+    public String simpleString() {
+	return header.dataSize+"b | "+header.type.name()+" | "+header.getChecksum();
+    }
+
+
     /***
      * To String.
      */

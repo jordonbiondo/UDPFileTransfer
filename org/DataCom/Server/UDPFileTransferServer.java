@@ -150,17 +150,17 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
     // /////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
 	Debug.ON = false;
-	
+
 	System.out.print("Server port: ");
 	Scanner input = new Scanner(System.in);
 	int port = input.nextInt();
-	
+
 	// Awesome, better, cooler, dynamic way of doing things.
 	UDPFileTransferServer server = new UDPFileTransferServer(port);
-	
+
 	// Old, nasty, static way of doing things.
 	//UDPFileTransferServer server = new UDPFileTransferServer(9898);
-	
+
 	// Start the server.
 	server.start();
     }

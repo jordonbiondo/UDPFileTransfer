@@ -66,7 +66,7 @@ public class UFTServerListener implements UFTPacketListener {
 	    Debug.pln("Received packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
 	    //Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
 	    //Debug.pln("Data is "+ packet.getDataAsString());
-
+	    System.out.println("Received: "+packet.simpleString());
 	    if (UFTPacket.checksumIsValid(packet)) {
 		this.server.setFriendAddress(dataPacket.getAddress());
 		this.server.enqueueReaction(packet);

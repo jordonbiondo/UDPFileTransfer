@@ -34,8 +34,6 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
 	    this.sendSocket = new DatagramSocket();
 
-	    
-
 	    // threads
 	    this.packetListener = new Thread(new UFTClientListener(this));
 	    this.packetSender = new Thread(new UFTClientSpeaker(this));
@@ -117,11 +115,14 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
 	} catch (FileNotFoundException fnfe) {
 	    Debug.err("file not found " + fnfe.getMessage());
-	    System.exit(1);
 	} catch(IOException ioe) {
 	    Debug.err("Could not write file " + ioe.getMessage());
-	    System.exit(1);
 	} finally {
+	    try {
+		this.packetSender.join();
+	    } catch (InterruptedException ei) {
+		Debug.pln("Failed to join threads");
+	    }
 	    System.exit(0);
 	}
     }
@@ -131,9 +132,19 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.END, 1, 1, 1);
 	UFTPacket packet = new UFTPacket(header, new byte[1]);
 	this.sendQueue.clear();
-	for (int i = 0; i < 10; i++) {
+	this.reactionQueue.clear();
+	this.shouldSend = false;
+	this.shouldListen = false;
+	try {
+	    this.packetSender.join();
+	    this.packetListener.join();
+	} catch (InterruptedException ei) {
+	    Debug.pln("Failed to join threads");
+	}
+	for (int i = 0; i < 100; i++) {
 	    enqueueForSend(packet);
 	}
+	this.shouldSend = true;
 	notifySpeaker();
     }
 
@@ -145,27 +156,29 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     public static void main(String[] args) {
 	try {
 	    Debug.ON = false;
-		
-		System.out.print("Client port: ");
-		Scanner input = new Scanner(System.in);
-		int clientPort = input.nextInt();
-		
-		System.out.println();
-		System.out.print("Server port: ");
-		int serverPort = input.nextInt();
-		
-		System.out.println();
-		System.out.print("Server address: ");
-		String address = input.next();
-		
-		// New, awesome, cool dynamic way of doing it.
-		UDPFileTransferClient client = new UDPFileTransferClient(clientPort, serverPort, InetAddress.getByName(address));
-		
-		// Old yucky static way of doing it!!!!
+
+	    System.out.print("Client port: ");
+	    Scanner input = new Scanner(System.in);
+	    int clientPort = input.nextInt();
+
+	    System.out.println();
+	    System.out.print("Server port: ");
+	    int serverPort = input.nextInt();
+
+	    System.out.println();
+	    System.out.print("Server address: ");
+	    String address = input.next();
+
+
+	    // New, awesome, cool dynamic way of doing it.
+	    UDPFileTransferClient client = new UDPFileTransferClient(clientPort, serverPort, InetAddress.getByName(address));
+
+	    // Old yucky static way of doing it!!!!
 	    //UDPFileTransferClient client = new UDPFileTransferClient(9292, 9797, InetAddress.getByName("127.0.0.1"));
 	    client.start();
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {
+	    System.out.println("invalid ip");
 	    Debug.err(uhe.getMessage());
 	}
 
