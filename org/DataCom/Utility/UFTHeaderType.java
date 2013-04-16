@@ -2,7 +2,7 @@ package org.DataCom.Utility;
 
 import java.math.BigInteger;
 
-/*
+/**
  * UFT Header type
  */
 public enum UFTHeaderType {
@@ -25,7 +25,7 @@ public enum UFTHeaderType {
     // /////////////////////////////////////////////////////////////////
     //  Methods
     // /////////////////////////////////////////////////////////////////
-    /*
+    /**
      * Create a header type enum from some bytes
      */
     public static UFTHeaderType fromBytes(byte[] bytes){

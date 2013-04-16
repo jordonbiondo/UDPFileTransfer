@@ -5,31 +5,31 @@ import java.io.*;
 import java.net.*;
 import org.DataCom.Utility.*;
 
-/*
+/**
  * UFT File Splitter.
  * Express file chunkification tool
  */
 public class UFTFileSplitter {
 
-    /*
+    /**
      * Default size, in bytes, for each chunk
      */
     public static final int DEFAULT_CHUNK_SIZE = UFTPacket.BYTE_SIZE - UFTHeader.BYTE_SIZE;
 
 
-    /*
+    /**
      * File to being split.
      */
     private File file;
 
 
-    /*
+    /**
      * Maximum number of bytes per chunk;
      */
     private int maxChunkSize = DEFAULT_CHUNK_SIZE;
 
 
-    /*
+    /**
      * List of byte arrays representing the given file.
      */
     private ArrayList<byte[]> chunks;
@@ -39,7 +39,7 @@ public class UFTFileSplitter {
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Create a new splitter for a given file
      *
      * Main Constructor to be filled in
@@ -51,7 +51,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Create a new splitter from a filename
      */
     public UFTFileSplitter(String filename, int maxChunkSize) throws IOException {
@@ -60,7 +60,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Create a new splitter for a given file
      */
     public UFTFileSplitter(File file) throws IOException {
@@ -68,7 +68,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Create a new splitter from a filename
      */
     public UFTFileSplitter(String filename) throws IOException {
@@ -77,7 +77,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Chunk up dat file. mkay
      */
     private void chunk() throws IOException {
@@ -110,7 +110,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Rechunk the file with a given chunk size.
      */
     // public void rechunk(int maxChunkSize) {
@@ -123,7 +123,7 @@ public class UFTFileSplitter {
     //   Methods
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Return number of chunks.
      */
     public int chunkCount() {
@@ -131,7 +131,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Returns the file tied used by the splitter.
      */
     public File getFile() {
@@ -139,7 +139,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Returns all the file's chunks.
      */
     public ArrayList<byte[]> getChunks() {
@@ -147,7 +147,7 @@ public class UFTFileSplitter {
     }
 
 
-    /*
+    /**
      * Get bytes for a file chunk at index
      */
     public byte[] getChunk(int index) {

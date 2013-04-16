@@ -20,7 +20,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
     public UFTPacket[] fileDataPackets = new UFTPacket[1];
 
-    /*
+    /**
      * New Client
      */
     public UDPFileTransferClient(int listenPort, int sendPort, InetAddress serverAddress) {
@@ -54,7 +54,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * Request a file from the server
      */
     public void requestAFile() {
@@ -68,7 +68,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     }
 
 
-    /*
+    /**
      * Start up the speaker thread if it's dead
      */
     public void notifySpeaker() {
@@ -79,7 +79,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     }
 
 
-    /*
+    /**
      * Start the responder thrad if it's dead
      */
     public void notifyResponder() {
@@ -98,7 +98,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     }
 
 
-    /*
+    /**
      * Write the received data to a file
      */
     public void writeFileAndEnd() {

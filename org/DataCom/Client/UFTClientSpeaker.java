@@ -8,7 +8,7 @@ import org.DataCom.Utility.*;
 
 public class UFTClientSpeaker implements UFTPacketSpeaker {
 
-    /*
+    /**
      * Parent server
      */
     UDPFileTransferClient client;
@@ -23,7 +23,7 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * UFT Packet Listener
      */
     public UFTClientSpeaker(UDPFileTransferClient client) {
@@ -36,7 +36,7 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * Is there Data to send?
      */
     public boolean hasData() {
@@ -44,7 +44,7 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
     }
 
 
-    /*
+    /**
      * Try to send a UFTPacket
      */
     public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
@@ -62,7 +62,7 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 
 
 
-    /*
+    /**
      * Thread run loop
      */
     public void run() {

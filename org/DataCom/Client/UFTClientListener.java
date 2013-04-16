@@ -9,13 +9,13 @@ import org.DataCom.Utility.*;
 
 public class UFTClientListener implements UFTPacketListener {
 
-    /*
+    /**
      * Parent server
      */
     UDPFileTransferClient client;
 
 
-    /*
+    /**
      * Client socket
      */
     DatagramSocket clientSocket;
@@ -26,7 +26,7 @@ public class UFTClientListener implements UFTPacketListener {
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * UFT Packet Listener
      */
     public UFTClientListener(UDPFileTransferClient client) throws SocketException{
@@ -35,7 +35,7 @@ public class UFTClientListener implements UFTPacketListener {
     }
 
 
-    /*
+    /**
      * Run the thread
      */
     public void run() {
@@ -73,7 +73,7 @@ public class UFTClientListener implements UFTPacketListener {
 
 
 
-    /*
+    /**
      * When a packet contains an error do...
      */
     public void onPacketError(DatagramPacket packet, Exception e) {
