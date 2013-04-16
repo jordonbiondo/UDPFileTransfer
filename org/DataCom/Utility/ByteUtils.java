@@ -20,6 +20,14 @@ public class ByteUtils {
     }
 
 
+    public static byte[] byteVal(int num) {
+	ByteBuffer buffer = ByteBuffer.allocate(4);
+	buffer.putInt(num);
+	return buffer.array();
+
+    }
+
+
     /*
      * Get long value of 8 bytes
      */
@@ -45,24 +53,3 @@ public class ByteUtils {
 
 }
 
-
-/*
- * Because new exceptions are fun
- */
-class ByteTranslationException extends Exception {
-
-    /*
-     * New exception with message
-     */
-    public ByteTranslationException(String s) {
-	super(s);
-    }
-
-
-    /*
-     * Formatted message for bad byte count;
-     */
-    public ByteTranslationException(String name, int expected, int given) {
-	super("Error in "+name+" translation: needed "+expected+" bytes, given: "+given);
-    }
-}
