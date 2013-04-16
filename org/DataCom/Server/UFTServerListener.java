@@ -60,6 +60,7 @@ public class UFTServerListener implements UFTPacketListener {
 	try {
 	    UFTPacket packet = new UFTPacket(dataPacket);
 	    //Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum());
+	    Debug.pln("Received packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
 	    //Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
 	    //Debug.pln("Data is "+ packet.getDataAsString());
 
@@ -70,25 +71,6 @@ public class UFTServerListener implements UFTPacketListener {
 	    } else {
 	    	throw new MalformedPacketException("Checksum validation failure!");
 	    }
-
-	    // This.server.setSendPort(packet.getHeader().sourcePort);
-	    // this.server.setFriendAddress(dataPacket.getAddress());
-
-	    // if (UFTPacket.checksumIsValid(packet)) {
-	    // 	server.enqueueReaction(packet);
-	    // 	if(server.acceptsRequest(packet.getDataAsString())) {
-	    // 	    Debug.pln("Accepted");
-	    // 	    File file = new File(packet.getDataAsString());
-	    // 	    for (UFTPacket fPack : server.prepareFileTransmission(file)) {
-	    // 		server.enqueueForSend(fPack);
-	    // 	    }
-	    // 	} else {
-	    // 	    Debug.pln("not accepted");
-	    // 	}
-	    // 	server.notifySpeaker();
-	    // } else {
-	    // 	throw new MalformedPacketException("Checksum validation failure!");
-	    // }
 	} catch(MalformedPacketException mpe) {
 	    onPacketError(dataPacket, mpe);
 	}

@@ -53,6 +53,10 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
      * Try to send a UFTPacket
      */
     public void sendPacket(UFTPacket packet, int port, InetAddress address) throws IOException{
+	if(packet.getHeader().type == UFTHeaderType.DAT){
+	    if (this.server.acknowledgements[packet.getHeader().packetNumber -1]) return;
+	}
+
 	this.server.prepareSendSocket(port);
 	// ensure checksum
 	packet.prepareForSend();
@@ -62,9 +66,12 @@ public class UFTServerSpeaker implements UFTPacketSpeaker {
 	// send it
 
 	Random random = new Random();
-	Debug.pln("sending packet: "+ packet);
-	this.server.sendSocket.send(sendPacket);
+	Debug.pln("sending packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
+
+	//if (random.nextInt(2) == 0 )
+	    this.server.sendSocket.send(sendPacket);
 	this.server.enqueueForSend(packet);
+
     }
 
 

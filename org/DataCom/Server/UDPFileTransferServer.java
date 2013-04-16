@@ -9,8 +9,14 @@ import org.DataCom.Utility.*;
 
 public class UDPFileTransferServer extends UDPFileTransferNode {
 
+    /**
+     * acklowledged packets
+     */
+    public boolean[] acknowledgements;
 
-
+    /**
+     * Currently requested file
+     */
     public String currentRequest = null;
     // /////////////////////////////////////////////////////////////////
     //   Constructors
@@ -143,6 +149,7 @@ public class UDPFileTransferServer extends UDPFileTransferNode {
     //   APPLICATION MAIN
     // /////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
+	Debug.ON = false;
 	UDPFileTransferServer server = new UDPFileTransferServer(9898);
 	server.start();
     }

@@ -27,17 +27,31 @@ public class UFTServerResponder extends UFTPacketResponder {
 	switch(packet.getHeader().type) {
 	case GET: respondToGET(packet); break;
 	case ERR: break;
-	case ACK: break;
+	case ACK: respondToACK(packet);break;
 	case END: respondToEND(packet); break;
 	}
     }
 
+    /**
+     * Respond to ACK packet
+     */
+    public void respondToACK(UFTPacket packet) {
+	UDPFileTransferServer server = (UDPFileTransferServer)master;
+	try {
+	    server.acknowledgements[ByteUtils.intVal(packet.getData()) -1] = true;
+	} catch (ByteTranslationException bte) {
+	    Debug.err(bte.getMessage() + " | couldn't understand ack pack");
+	}
+    }
 
+    /**
+     * Respond to end packet
+     */
     public void respondToEND(UFTPacket packet) {
 	Debug.pln("END received, resetting session...");
 	UDPFileTransferServer server = (UDPFileTransferServer)master;
 	server.endSession();
-	
+
     }
 
     /**
@@ -45,7 +59,6 @@ public class UFTServerResponder extends UFTPacketResponder {
      */
     public void respondToGET(UFTPacket packet) {
 	UDPFileTransferServer server = (UDPFileTransferServer)master;
-
 	if (server.currentRequest == null) {
 	    this.master.setSendPort(packet.getHeader().sourcePort);
 	    if(server.acceptsRequest(packet.getDataAsString())) {
@@ -61,7 +74,9 @@ public class UFTServerResponder extends UFTPacketResponder {
 
 
 		File file = new File(packet.getDataAsString());
-		for (UFTPacket fPack : server.prepareFileTransmission(file)) {
+		ArrayList<UFTPacket> packets = server.prepareFileTransmission(file);
+		server.acknowledgements = new boolean[packets.size()];
+		for (UFTPacket fPack : packets) {
 		    master.enqueueForSend(fPack);
 		}
 	    } else {

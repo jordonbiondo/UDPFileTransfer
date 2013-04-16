@@ -54,7 +54,8 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 	byte[] packetData = packet.toBytes();
 	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
 	// send it
-	Debug.pln("sending packet: "+packet.getHeader().getChecksum());
+	//Debug.pln("sending packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
+	Debug.pln("sending" + packet);
 	client.sendSocket.send(sendPacket);
 
     }
@@ -69,16 +70,11 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 	    UFTPacket next = client.getSendQueue().poll();
 	    try {
 		this.sendPacket(next, client.getSendPort(), client.getFriendAddress());
-		if (this.client.acknowledged.get(next.getDataAsString()) == null) {
-		    //this.client.enqueueForSend(next);
-		}  else {
-		    Debug.pln("WE GOT AN ACK!");
-		}
+
 	    } catch (IOException se) {
 		System.out.println("Failed to send packet, requeueing");
-		this.client.enqueueForSend(next);
 	    } finally {
-
+		this.client.enqueueForSend(next);
 	    }
 	}
 

@@ -49,14 +49,24 @@ public class UFTClientResponder extends UFTPacketResponder {
 	if (client.fileDataPackets.length < packet.getHeader().totalPackets) {
 	    client.fileDataPackets = new UFTPacket[packet.getHeader().totalPackets];
 	}
+	client.gettingData = true;
 	client.fileDataPackets[packet.getHeader().packetNumber-1] = packet;
 	Debug.pln("putting packet: "+packet.getHeader().packetNumber+"/"+packet.getHeader().totalPackets);
 
-	boolean done = true;
-	for (UFTPacket pack : client.fileDataPackets) {
-	    if (pack == null) done = false;
-	}
+	UFTPacket ackPack = UFTPacket.createACKPacket(packet);
+	this.master.enqueueForSend(ackPack);
+	this.master.notifySpeaker();
 
+	boolean done = true;
+	float x = 0;
+	for (UFTPacket pack : client.fileDataPackets) {
+	    if (pack == null) {
+		done = false;
+	    } else {
+		x++;
+	    }
+	}
+	Debug.pln(x/(float)packet.getHeader().totalPackets);
 	if (done) {
 	    client.writeFileAndEnd();
 	}

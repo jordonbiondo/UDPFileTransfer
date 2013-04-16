@@ -56,7 +56,7 @@ public class UFTClientListener implements UFTPacketListener {
     public void onPacketReceive(DatagramPacket dataPacket) {
 	try {
 	    UFTPacket packet = new UFTPacket(dataPacket);
-	    Debug.pln("received packet: "+packet.getHeader().getChecksum() + " | " + packet.getHeader().type.name());
+	    //Debug.pln("received packet: "+packet.getHeader().getChecksum() + " | " + packet.getHeader().type.name());
 	    //Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum() + "type: " + packet.getHeader().type.name());
 	    //Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
 	    //	    Debug.pln("Data is "+ packet.getDataAsString());

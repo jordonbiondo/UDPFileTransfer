@@ -16,6 +16,8 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
     private String currentRequest;
 
+    public boolean gettingData = false;
+
     public UFTPacket[] fileDataPackets = new UFTPacket[1];
 
     /*
@@ -129,8 +131,9 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.END, 1, 1, 1);
 	UFTPacket packet = new UFTPacket(header, new byte[1]);
 	this.sendQueue.clear();
-	enqueueForSend(packet);
-	//
+	for (int i = 0; i < 10; i++) {
+	    enqueueForSend(packet);
+	}
 	notifySpeaker();
     }
 
@@ -141,8 +144,8 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
     public static void main(String[] args) {
 	try {
-
-	    UDPFileTransferClient client = new UDPFileTransferClient(9292, 9898, InetAddress.getByName("127.0.0.1"));
+	    Debug.ON = false;
+	    UDPFileTransferClient client = new UDPFileTransferClient(9292, 9797, InetAddress.getByName("127.0.0.1"));
 	    client.start();
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {

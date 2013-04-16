@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class UFTPacket {
 
-    public static final int BYTE_SIZE = 512;
+    public static final int BYTE_SIZE = 1024 - UFTHeader.BYTE_SIZE;
     /*
      * Header
      */
