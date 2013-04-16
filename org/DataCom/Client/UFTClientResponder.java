@@ -58,16 +58,13 @@ public class UFTClientResponder extends UFTPacketResponder {
 	this.master.notifySpeaker();
 
 	boolean done = true;
-	float x = 0;
 	for (UFTPacket pack : client.fileDataPackets) {
 	    if (pack == null) {
 		done = false;
-	    } else {
-		x++;
 	    }
 	}
-	Debug.pln(x/(float)packet.getHeader().totalPackets);
 	if (done) {
+	    System.out.println("DONE");
 	    client.writeFileAndEnd();
 	}
     }
@@ -79,7 +76,6 @@ public class UFTClientResponder extends UFTPacketResponder {
      */
     public void respondToERR(UFTPacket packet) {
 	System.out.println(packet.getDataAsString());
-	System.exit(1);
     }
 
 

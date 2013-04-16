@@ -54,8 +54,9 @@ public class UFTClientSpeaker implements UFTPacketSpeaker {
 	byte[] packetData = packet.toBytes();
 	DatagramPacket sendPacket = new DatagramPacket(packetData, packetData.length, address, port);
 	// send it
-	//Debug.pln("sending packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
+	Debug.pln("sending packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
 	Debug.pln("sending" + packet);
+	System.out.println("sending packet: "+packet.getHeader().getChecksum()+ " | " + packet.getHeader().type.name());
 	client.sendSocket.send(sendPacket);
 
     }

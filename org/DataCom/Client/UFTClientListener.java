@@ -15,6 +15,7 @@ public class UFTClientListener implements UFTPacketListener {
     UDPFileTransferClient client;
 
 
+
     /**
      * Client socket
      */
@@ -55,11 +56,14 @@ public class UFTClientListener implements UFTPacketListener {
 
     public void onPacketReceive(DatagramPacket dataPacket) {
 	try {
+
+	    client.lastPacketTime = (int)(System.currentTimeMillis()/1000);
 	    UFTPacket packet = new UFTPacket(dataPacket);
-	    //Debug.pln("received packet: "+packet.getHeader().getChecksum() + " | " + packet.getHeader().type.name());
-	    //Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum() + "type: " + packet.getHeader().type.name());
-	    //Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
-	    //	    Debug.pln("Data is "+ packet.getDataAsString());
+	    Debug.pln("received packet: "+packet.getHeader().getChecksum() + " | " + packet.getHeader().type.name());
+	    Debug.pln("Received packet, checksum: "+packet.getHeader().getChecksum() + "type: " + packet.getHeader().type.name());
+	    Debug.pln("Checksum is "+ (UFTPacket.checksumIsValid(packet) ? "valid" : "INCORRECT"));
+	    Debug.pln("Data is "+ packet.getDataAsString());
+	    System.out.println("Received: "+packet.simpleString());
 	    if (UFTPacket.checksumIsValid(packet)) {
 		this.client.enqueueReaction(packet);
 		this.client.notifyResponder();

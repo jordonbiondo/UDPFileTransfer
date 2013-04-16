@@ -20,6 +20,10 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 
     public UFTPacket[] fileDataPackets = new UFTPacket[1];
 
+    public Thread timeoutThread;
+
+    public int lastPacketTime = -1;
+
     /**
      * New Client
      */
@@ -27,14 +31,17 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	super();
 	try {
 	    // args
+	    lastPacketTime = (int)(System.currentTimeMillis()/1000);
+
 	    this.listenPort = listenPort;
 	    this.sendPort = sendPort;
 	    this.friendAddress = serverAddress;
 
 
 	    this.sendSocket = new DatagramSocket();
-
+	    
 	    // threads
+	    this.timeoutThread = new Thread(new UFTTimeoutChecker(this));
 	    this.packetListener = new Thread(new UFTClientListener(this));
 	    this.packetSender = new Thread(new UFTClientSpeaker(this));
 	    this.packetResponder = new Thread(new UFTClientResponder(this));
@@ -63,6 +70,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	UFTPacket packet = new UFTPacket(header, input.getBytes());
 	enqueueForSend(packet);
 	notifySpeaker();
+	timeoutThread.start();
     }
 
 
@@ -93,6 +101,7 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	packetSender.start();
 	packetListener.start();
 	packetResponder.start();
+	
     }
 
 
@@ -118,11 +127,10 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	} catch(IOException ioe) {
 	    Debug.err("Could not write file " + ioe.getMessage());
 	} finally {
-	    try {
-		this.packetSender.join();
-	    } catch (InterruptedException ei) {
-		Debug.pln("Failed to join threads");
-	    }
+	    this.shouldSend = false;
+	    this.shouldListen = false;
+	    this.reactionQueue.clear();
+	    this.sendQueue.clear();
 	    System.exit(0);
 	}
     }
