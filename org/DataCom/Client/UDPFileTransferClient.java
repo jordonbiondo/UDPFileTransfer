@@ -145,7 +145,24 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
     public static void main(String[] args) {
 	try {
 	    Debug.ON = false;
-	    UDPFileTransferClient client = new UDPFileTransferClient(9292, 9797, InetAddress.getByName("127.0.0.1"));
+		
+		System.out.print("Client port: ");
+		Scanner input = new Scanner(System.in);
+		int clientPort = input.nextInt();
+		
+		System.out.println();
+		System.out.print("Server port: ");
+		int serverPort = input.nextInt();
+		
+		System.out.println();
+		System.out.print("Server address: ");
+		String address = input.next();
+		
+		// New, awesome, cool dynamic way of doing it.
+		UDPFileTransferClient client = new UDPFileTransferClient(clientPort, serverPort, InetAddress.getByName(address));
+		
+		// Old yucky static way of doing it!!!!
+	    //UDPFileTransferClient client = new UDPFileTransferClient(9292, 9797, InetAddress.getByName("127.0.0.1"));
 	    client.start();
 	    client.requestAFile();
 	} catch (UnknownHostException uhe) {
