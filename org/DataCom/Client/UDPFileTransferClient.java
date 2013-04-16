@@ -132,19 +132,9 @@ public class UDPFileTransferClient extends UDPFileTransferNode {
 	UFTHeader header = new UFTHeader(this.listenPort, this.sendPort, UFTHeaderType.END, 1, 1, 1);
 	UFTPacket packet = new UFTPacket(header, new byte[1]);
 	this.sendQueue.clear();
-	this.reactionQueue.clear();
-	this.shouldSend = false;
-	this.shouldListen = false;
-	try {
-	    this.packetSender.join();
-	    this.packetListener.join();
-	} catch (InterruptedException ei) {
-	    Debug.pln("Failed to join threads");
-	}
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 10; i++) {
 	    enqueueForSend(packet);
 	}
-	this.shouldSend = true;
 	notifySpeaker();
     }
 
