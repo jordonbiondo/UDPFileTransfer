@@ -105,7 +105,9 @@ public class UFTPacket {
     public void prepareForSend() {
 	this.header.computeChecksum(this.data);
     }
-    /*
+
+
+    /**
      * Return the packet header.
      */
     public UFTHeader getHeader() {
@@ -113,7 +115,7 @@ public class UFTPacket {
     }
 
 
-    /*
+    /**
      * Return the packets data bytes.
      */
     public byte[] getData() {
@@ -121,7 +123,7 @@ public class UFTPacket {
     }
 
 
-    /*
+    /**
      * Return the string representation of the data byte array.
      */
     public String getDataAsString() {
@@ -129,7 +131,7 @@ public class UFTPacket {
     }
 
 
-    /*
+    /**
      * Return the byte representation of the packet
      */
     public byte[] toBytes() {
@@ -147,7 +149,7 @@ public class UFTPacket {
     }
 
 
-    /*
+    /**
      * Return true if a recompuation of the checksum comes out the same as it's current value
      */
     public static boolean checksumIsValid(UFTPacket packet) {
@@ -155,7 +157,17 @@ public class UFTPacket {
     }
 
 
-    /*
+    public static UFTPacket createACKPacket(UFTPacket datPacket) {
+	UFTHeader header = new UFTHeader(datPacket.getHeader().destPort, datPacket.getHeader().sourcePort,
+					 UFTHeaderType.ACK,1, 1, 4);
+	byte[] seqenceNumData = ByteUtils.byteVal(datPacket.getHeader().packetNumber);
+	UFTPacket ackPacket = new UFTPacket(header, seqenceNumData);
+	ackPacket.prepareForSend();
+	return ackPacket;
+    }
+
+
+    /**
      * To String.
      */
     public String toString() {
