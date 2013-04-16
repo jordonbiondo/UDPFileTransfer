@@ -7,13 +7,13 @@ import java.net.*;
 
 public class UFTPacketAssembler {
 
-    /*
+    /**
      * Packet Source Port
      */
     int sourcePort;
 
 
-    /*
+    /**
      * Packet Destination Port
      */
     int destPort;
@@ -23,7 +23,7 @@ public class UFTPacketAssembler {
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Create a new Packet Assembler
      */
     public UFTPacketAssembler(int sourcePort, int destPort) {
@@ -36,7 +36,7 @@ public class UFTPacketAssembler {
     //   Methods
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Create a Datagram Packet and fill it with a UFTHeader and the given data
      */
     public DatagramPacket assemble(UFTHeaderType type, int packetNumber, int totalPackets, byte[] data) {
@@ -59,7 +59,7 @@ public class UFTPacketAssembler {
     }
 
 
-    /*
+    /**
      * Assemble a datagram packet from a complete UFTPacket
      */
     public static DatagramPacket assemble(UFTPacket packet) {

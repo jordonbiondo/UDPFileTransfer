@@ -6,18 +6,18 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-/*
+/**
  * UFT Packet.
  */
 public class UFTPacket {
 
     public static final int BYTE_SIZE = 1024 - UFTHeader.BYTE_SIZE;
-    /*
+    /**
      * Header
      */
     private UFTHeader header;
 
-    /*
+    /**
      * Packet data
      */
     private byte[] data;
@@ -28,7 +28,7 @@ public class UFTPacket {
     //   Constructors
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Create a UFTPacket given a DatagramPacket containing UFT data
      */
     public UFTPacket(DatagramPacket packet) throws MalformedPacketException {
@@ -87,7 +87,7 @@ public class UFTPacket {
 	}
     }
 
-    /*
+    /**
      * Create a UFTPacket from a header and data.
      */
     public UFTPacket(UFTHeader header, byte[] data) {
@@ -107,7 +107,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * Return the packet header.
      */
     public UFTHeader getHeader() {
@@ -115,7 +115,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * Return the packets data bytes.
      */
     public byte[] getData() {
@@ -123,7 +123,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * Return the string representation of the data byte array.
      */
     public String getDataAsString() {
@@ -131,7 +131,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * Return the byte representation of the packet
      */
     public byte[] toBytes() {
@@ -149,7 +149,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * Return true if a recompuation of the checksum comes out the same as it's current value
      */
     public static boolean checksumIsValid(UFTPacket packet) {
@@ -167,7 +167,7 @@ public class UFTPacket {
     }
 
 
-    /**
+    /***
      * To String.
      */
     public String toString() {

@@ -6,54 +6,54 @@ import java.nio.ByteBuffer;
 import java.util.*;
 
 
-/*
+/**
  * UFT Header.
  */
 public class UFTHeader {
 
-    /*
+    /**
      * The size in byte of a UFT Header
      * Subject to change
      */
     public static final int BYTE_SIZE = 32;
 
-    /*
+    /**
      * Header type.
      */
     public final UFTHeaderType type;
 
 
-    /*
+    /**
      * Source Port.
      */
     public final int sourcePort;
 
 
-    /*
+    /**
      * Destination Port.
      */
     public final int destPort;
 
 
-    /*
+    /**
      * Sequence number
      */
     public final int packetNumber;
 
 
-    /*
+    /**
      * Total Packets
      */
     public final int totalPackets;
 
 
-    /*
+    /**
      * Data size
      */
     public final int  dataSize;
 
 
-    /*
+    /**
      * Checksum
      */
     private long checksum = 0;
@@ -62,7 +62,7 @@ public class UFTHeader {
     //  Constructors
     // /////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * UFTHeader
      */
     public UFTHeader(int sourcePort, int destPort, UFTHeaderType type,
@@ -81,7 +81,7 @@ public class UFTHeader {
     // /////////////////////////////////////////////////////////////////
 
 
-    /*
+    /**
      * Computer the checksum with CRC32
      */
     public void computeChecksum(final byte[] data) {
@@ -89,7 +89,7 @@ public class UFTHeader {
     }
     
 
-    /*
+    /**
      * Get Header checksum
      */
     public long getChecksum() {
@@ -97,7 +97,7 @@ public class UFTHeader {
     }
 
 
-    /*
+    /**
      * Override the current checksum
      */
     public void overrideChecksum(long checksum) {
@@ -105,7 +105,7 @@ public class UFTHeader {
     }
 
 
-    /*
+    /**
      * Get Header as Byte Array.
      */
     public byte[] toBytes() {
@@ -121,7 +121,7 @@ public class UFTHeader {
     }
 
 
-    /*
+    /**
      * To String.
      */
     public String toString() {

@@ -4,12 +4,12 @@ import java.math.*;
 import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
 
-/*
+/**
  * Byte Utils
  */
 public class ByteUtils {
 
-    /*
+    /**
      * Get int value fo 4 bytes
      */
     public static int intVal(byte[] bytes) throws ByteTranslationException {
@@ -28,7 +28,7 @@ public class ByteUtils {
     }
 
 
-    /*
+    /**
      * Get long value of 8 bytes
      */
     public static long longVal(byte[] bytes) throws ByteTranslationException {
@@ -41,7 +41,7 @@ public class ByteUtils {
 
 
 
-    /*
+    /**
      * Get the crc32 checksum of an array of bytes
      */
     public static long computeCRCChecksum(final byte[] data) {
